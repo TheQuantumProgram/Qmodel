@@ -1,0 +1,1 @@
+"""Effect-based property representations."""

@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.qmodel/run_single_result.schema.json",
+  "title": "run_single result",
+  "type": "object",
+  "required": [
+    "model_path",
+    "program_name",
+    "reconstruction_mode",
+    "run_concrete",
+    "assertion_name",
+    "assertion_kind",
+    "total_elapsed_seconds",
+    "abstract",
+    "concrete",
+    "comparison"
+  ],
+  "properties": {
+    "model_path": {
+      "type": "string"
+    },
+    "program_name": {
+      "type": "string"
+    },
+    "reconstruction_mode": {
+      "type": "string",
+      "enum": ["trusted", "checked"]
+    },
+    "run_concrete": {
+      "type": "boolean"
+    },
+    "assertion_name": {
+      "type": ["string", "null"]
+    },
+    "assertion_kind": {
+      "type": "string",
+      "enum": ["probability", "reachability"]
+    },
+    "total_elapsed_seconds": {
+      "type": "number",
+      "minimum": 0
+    },
+    "abstract": {
+      "type": "object",
+      "required": [
+        "judgment",
+        "elapsed_seconds",
+        "max_state_bytes",
+        "max_state_mib",
+        "max_transition_bytes",
+        "max_transition_mib",
+        "max_execution_bytes",
+        "max_execution_mib"
+      ],
+      "properties": {
+        "judgment": {
+          "type": "string"
+        },
+        "elapsed_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_state_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_state_mib": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_transition_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_transition_mib": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_execution_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_execution_mib": {
+          "type": "number",
+          "minimum": 0
+        },
+        "probability": {
+          "type": "number"
+        },
+        "threshold": {
+          "type": "number"
+        },
+        "max_overlap": {
+          "type": "number"
+        },
+        "first_reached_index": {
+          "type": ["integer", "null"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "concrete": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "judgment": {
+          "type": "string"
+        },
+        "probability": {
+          "type": "number"
+        },
+        "threshold": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": true
+    },
+    "comparison": {
+      "type": "object",
+      "required": [
+        "abstract_ideal_pure_lower_bound",
+        "full_execution"
+      ],
+      "properties": {
+        "abstract_ideal_pure_lower_bound": {
+          "type": "object",
+          "required": [
+            "max_state_bytes",
+            "max_state_mib",
+            "max_transition_bytes",
+            "max_transition_mib",
+            "max_execution_bytes",
+            "max_execution_mib"
+          ],
+          "properties": {
+            "max_state_bytes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "max_state_mib": {
+              "type": "number",
+              "minimum": 0
+            },
+            "max_transition_bytes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "max_transition_mib": {
+              "type": "number",
+              "minimum": 0
+            },
+            "max_execution_bytes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "max_execution_mib": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "full_execution": {
+          "type": "object",
+          "required": [
+            "qubit_count",
+            "statevector_bytes",
+            "statevector_mib",
+            "density_matrix_bytes",
+            "density_matrix_mib",
+            "time_benchmark"
+          ],
+          "properties": {
+            "qubit_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "statevector_bytes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "statevector_mib": {
+              "type": "number",
+              "minimum": 0
+            },
+            "density_matrix_bytes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "density_matrix_mib": {
+              "type": "number",
+              "minimum": 0
+            },
+            "time_benchmark": {
+              "type": "object",
+              "required": [
+                "mode",
+                "cutoff_qubits"
+              ],
+              "properties": {
+                "mode": {
+                  "type": "string",
+                  "enum": ["measured", "skipped"]
+                },
+                "cutoff_qubits": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "statevector_elapsed_seconds": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "reason": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

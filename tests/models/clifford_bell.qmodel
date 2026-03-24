@@ -1,0 +1,53 @@
+format: qmodel-v1
+program_name: clifford_bell
+metadata:
+  family: clifford
+  n: 2
+
+qubits: [q0, q1]
+initial_state: zero
+
+gates:
+  - name: H
+    targets: [q0]
+    label: prepare-control
+  - name: CX
+    controls: [q0]
+    targets: [q1]
+    label: entangle-pair
+
+measurement:
+  qubits: [q0, q1]
+  basis: computational
+
+organization_schedule:
+  initial_state: s0
+  states:
+    - name: s0
+      units:
+        - name: bell_pair
+          qubits: [q0, q1]
+      transition:
+        gate_index: 0
+        next_state: s1
+    - name: s1
+      units:
+        - name: bell_pair
+          qubits: [q0, q1]
+      transition:
+        gate_index: 1
+        next_state: s2
+    - name: s2
+      units:
+        - name: bell_pair
+          qubits: [q0, q1]
+
+assertion:
+  name: bell_measurement_mass
+  kind: probability
+  target:
+    type: measurement_outcome
+    scope: [q0, q1]
+    outcomes: ["00", "11"]
+  comparator: ">="
+  threshold: 1.0
