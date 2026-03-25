@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 .pytest_cache/
 *.egg-info/
+scripts/generate_*.py
 
 experiment_data/raw_results/**
 !experiment_data/raw_results/.gitkeep

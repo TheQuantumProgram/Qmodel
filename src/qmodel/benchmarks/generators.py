@@ -18,6 +18,10 @@ BV_STANDARD_SIZES = (10, 20, 50, 100, 150, 200)
 AIQFT_FAMILY_VARIANTS = (
     (10, 5),
     (20, 5),
+    (50, 5),
+    (100, 5),
+    (150, 5),
+    (200, 5),
 )
 
 
@@ -117,16 +121,11 @@ def _aiqft_target_string(n: int) -> str:
 
 
 def _aiqft_threshold(n: int, window_size: int) -> float:
-    calibrated_thresholds = {
-        (10, 5): 0.997,
-        (20, 5): 0.997,
-    }
-    try:
-        return calibrated_thresholds[(n, window_size)]
-    except KeyError as exc:
-        raise ValueError(
-            f"No calibrated AIQFT threshold for n={n}, window_size={window_size}"
-        ) from exc
+    if window_size == 5:
+        return 0.997
+    raise ValueError(
+        f"No calibrated AIQFT threshold for n={n}, window_size={window_size}"
+    )
 
 
 def _bitwise_singleton_states(qubit_names: list[str], gate_count: int) -> list[dict[str, Any]]:

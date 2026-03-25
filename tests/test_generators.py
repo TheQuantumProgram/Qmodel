@@ -3,9 +3,6 @@ from __future__ import annotations
 import tempfile
 import unittest
 from pathlib import Path
-from contextlib import redirect_stdout
-import io
-import importlib.util
 
 from qmodel.benchmarks.generators import (
     build_aiqft_family_payloads,
@@ -195,25 +192,6 @@ class BVGeneratorTests(unittest.TestCase):
                 spec = parse_qmodel_file(str(path))
                 self.assertTrue(spec.program_name.startswith("bv_"))
 
-    def test_generate_bv_models_script_path_can_be_invoked(self) -> None:
-        script_path = Path("/home/li/project/QCE-2026/project_code/scripts/generate_bv_models.py")
-        spec = importlib.util.spec_from_file_location("generate_bv_models", script_path)
-        assert spec is not None and spec.loader is not None
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        with tempfile.TemporaryDirectory() as tmpdir:
-            buffer = io.StringIO()
-            with redirect_stdout(buffer):
-                result = module.main(tmpdir)
-
-            self.assertEqual(result, 0)
-            output = [line for line in buffer.getvalue().splitlines() if line.strip()]
-            self.assertEqual(len(output), 6)
-            self.assertTrue(all(line.endswith(".qmodel") for line in output))
-
-            written_paths = sorted(Path(tmpdir).glob("*.qmodel"))
-            self.assertEqual(len(written_paths), 6)
-
     def test_formal_bv_models_parse(self) -> None:
         base = Path(
             "/home/li/project/QCE-2026/project_code/experiment_data/models/BV"
@@ -247,11 +225,21 @@ class AIQFTGeneratorTests(unittest.TestCase):
         self.assertEqual(payload["gates"][0]["name"], "H")
         self.assertIn(payload["gates"][-1]["name"], {"H", "CP"})
 
-    def test_build_aiqft_family_payloads_covers_10_and_20(self) -> None:
+    def test_build_aiqft_family_payloads_covers_10_20_50_100_150_200(self) -> None:
         payloads = build_aiqft_family_payloads()
         names = [payload["program_name"] for payload in payloads]
 
-        self.assertEqual(names, ["aiqft_10_w5", "aiqft_20_w5"])
+        self.assertEqual(
+            names,
+            [
+                "aiqft_10_w5",
+                "aiqft_20_w5",
+                "aiqft_50_w5",
+                "aiqft_100_w5",
+                "aiqft_150_w5",
+                "aiqft_200_w5",
+            ],
+        )
 
     def test_write_generated_aiqft_payload_round_trips_through_parser(self) -> None:
         payload = build_aiqft_payload(20, 5)
@@ -268,44 +256,32 @@ class AIQFTGeneratorTests(unittest.TestCase):
         self.assertEqual(spec.assertions[0].target["type"], "bitwise_measurement_outcome")
         self.assertEqual(len(spec.organization_schedule.states), len(payload["gates"]) + 1)
 
-    def test_emit_aiqft_family_models_writes_two_files_in_tempdir(self) -> None:
+    def test_emit_aiqft_family_models_writes_six_files_in_tempdir(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
             written_paths = emit_aiqft_family_models(tmpdir)
-            self.assertEqual(len(written_paths), 2)
+            self.assertEqual(len(written_paths), 6)
             self.assertEqual(
                 [path.name for path in written_paths],
-                ["aiqft_10_w5.qmodel", "aiqft_20_w5.qmodel"],
+                [
+                    "aiqft_10_w5.qmodel",
+                    "aiqft_20_w5.qmodel",
+                    "aiqft_50_w5.qmodel",
+                    "aiqft_100_w5.qmodel",
+                    "aiqft_150_w5.qmodel",
+                    "aiqft_200_w5.qmodel",
+                ],
             )
             for path in written_paths:
                 self.assertTrue(path.exists(), path)
                 spec = parse_qmodel_file(str(path))
                 self.assertTrue(spec.program_name.startswith("aiqft_"))
 
-    def test_generate_aiqft_models_script_path_can_be_invoked(self) -> None:
-        script_path = Path("/home/li/project/QCE-2026/project_code/scripts/generate_aiqft_models.py")
-        spec = importlib.util.spec_from_file_location("generate_aiqft_models", script_path)
-        assert spec is not None and spec.loader is not None
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        with tempfile.TemporaryDirectory() as tmpdir:
-            buffer = io.StringIO()
-            with redirect_stdout(buffer):
-                result = module.main(tmpdir)
-
-            self.assertEqual(result, 0)
-            output = [line for line in buffer.getvalue().splitlines() if line.strip()]
-            self.assertEqual(len(output), 2)
-            self.assertTrue(all(line.endswith(".qmodel") for line in output))
-
-            written_paths = sorted(Path(tmpdir).glob("*.qmodel"))
-            self.assertEqual(len(written_paths), 2)
-
     def test_formal_aiqft_models_parse(self) -> None:
         base = Path(
             "/home/li/project/QCE-2026/project_code/experiment_data/models/AIQFT"
         )
         paths = sorted(path for path in base.glob("*.qmodel") if path.name != ".gitkeep")
-        self.assertEqual(len(paths), 2)
+        self.assertEqual(len(paths), 6)
         for path in paths:
             spec = parse_qmodel_file(str(path))
             self.assertTrue(spec.program_name.startswith("aiqft_"))
