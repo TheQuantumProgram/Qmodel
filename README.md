@@ -70,6 +70,33 @@ Current BV formal models:
 Current AIQFT formal models:
 - sliding-window AIQFT recovery: `n = 10, 20, 50, 100, 150, 200`, all with window size `5`
 
+Current Adder formal models:
+- ripple-carry adders with dynamic carry-window schedules: `n = 10, 20, 50, 100, 150, 200`
+
+Current Grover formal models:
+- bounded-local-core multi-solution Grover instances: `n = 10, 20, 50, 100, 150, 200`
+
+Current Custom formal models:
+- small positive baselines:
+  - `custom_overlap_chain_prob_6`
+  - `custom_back_edge_prob_6`
+  - `custom_split_merge_prob_8`
+  - `custom_ccx_ladder_reach_9`
+  - `custom_uncompute_reach_8`
+  - `custom_disconnected_product_prob_10`
+- small counterexamples:
+  - `custom_overlap_chain_counter_6`
+  - `custom_split_merge_counter_8`
+  - `custom_disconnected_product_counter_10`
+  - `custom_ccx_ladder_counter_9`
+  - `custom_uncompute_counter_8`
+- medium positive models:
+  - `custom_overlap_chain_prob_12`
+  - `custom_back_edge_prob_12`
+  - `custom_split_merge_prob_14`
+  - `custom_ccx_ladder_reach_15`
+  - `custom_disconnected_product_prob_20`
+
 Current limitations:
 - the benchmark-running scripts in `scripts/` are still placeholders
 - tolerant reconstruction across overlapping units is still heuristic when no direct shared certificate covers the full requested workspace
