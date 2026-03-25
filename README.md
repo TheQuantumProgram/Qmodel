@@ -79,7 +79,6 @@ Runner behavior:
   - an abstract ideal pure-state lower-bound estimate
   - exact full-execution statevector/density-matrix space formulas
   - optional full statevector timing when the qubit count is below the automatic cutoff
-- `scripts/generate_ghz_models.py` materializes the current GHZ family into `experiment_data/models/GHZ/`
 
 Current full-execution timing cutoff:
 - `22` qubits
