@@ -20,6 +20,7 @@ from qmodel.spec import GateSpec, QuantumProgramSpec, UnitSpec
 
 
 ReconstructionMode = str
+_COMPLEX128_BYTES = 16
 
 
 @dataclass(slots=True)
@@ -28,6 +29,24 @@ class AbstractExecutionTrace:
 
     states: tuple[AbstractState, ...]
     transitions: tuple[AbstractTransition, ...]
+
+
+@dataclass(slots=True)
+class AbstractExecutionStats:
+    """Peak-memory statistics for one abstract execution."""
+
+    max_state_bytes: int
+    max_transition_bytes: int
+    max_ideal_pure_state_bytes: int
+    max_ideal_pure_transition_bytes: int
+
+
+@dataclass(slots=True)
+class AbstractExecutionFinalState:
+    """Final-state-only abstract execution result with peak statistics."""
+
+    final_state: AbstractState
+    stats: AbstractExecutionStats
 
 
 def gate_support(gate: GateSpec) -> tuple[str, ...]:
@@ -152,6 +171,25 @@ def _connected_overlap_components(units: Sequence[UnitSpec]) -> list[list[UnitSp
 
 def _units_witness_bytes(units: Sequence[AbstractUnitState]) -> int:
     return sum(int(unit.witness_rho.data.nbytes) for unit in units)
+
+
+def _pure_statevector_bytes(width: int) -> int:
+    return (2**width) * _COMPLEX128_BYTES
+
+
+def _pure_units_bytes(units: Sequence[AbstractUnitState]) -> int:
+    return sum(_pure_statevector_bytes(len(unit.qubits)) for unit in units)
+
+
+def _ideal_pure_transition_bytes(post_state: AbstractState) -> int:
+    workspace_qubits = post_state.metadata.get("workspace_qubits", ())
+    affected_post_views = set(post_state.metadata.get("affected_post_views", ()))
+    unaffected_units = [
+        unit
+        for unit in post_state.units
+        if (unit.name if unit.name is not None else "|".join(unit.qubits)) not in affected_post_views
+    ]
+    return _pure_statevector_bytes(len(workspace_qubits)) + _pure_units_bytes(unaffected_units)
 
 
 def _unit_identity(name: str | None, qubits: Sequence[str]) -> tuple[str | None, tuple[str, ...]]:
@@ -681,4 +719,60 @@ def build_abstract_trace(
     return AbstractExecutionTrace(
         states=tuple(states),
         transitions=tuple(transitions),
+    )
+
+
+def execute_abstract_to_final_state(
+    spec: QuantumProgramSpec,
+    organization_schedule: list[list[UnitSpec]] | None = None,
+    reconstruction_mode: ReconstructionMode = "trusted",
+) -> AbstractExecutionFinalState:
+    """Execute one abstract program while retaining only the current state."""
+
+    if organization_schedule is None:
+        if spec.organization_schedule is not None:
+            organization_schedule = _compile_organization_schedule(spec)
+        else:
+            if not spec.units:
+                raise ValueError("spec.units must be non-empty to build an abstract trace")
+            organization_schedule = [spec.units for _ in range(len(spec.gates) + 1)]
+
+    if len(organization_schedule) != len(spec.gates) + 1:
+        raise ValueError("organization_schedule must have length len(spec.gates) + 1")
+
+    current_state = _initial_state_from_zero(
+        organization_schedule[0], position=0, global_qubits=spec.qubits
+    )
+    max_state_bytes = _units_witness_bytes(current_state.units)
+    max_transition_bytes = 0
+    max_ideal_pure_state_bytes = _pure_units_bytes(current_state.units)
+    max_ideal_pure_transition_bytes = 0
+
+    for index, gate in enumerate(spec.gates):
+        current_state = merge_update_rewrite(
+            pre_state=current_state,
+            gate=gate,
+            global_qubits=spec.qubits,
+            post_units=organization_schedule[index + 1],
+            reconstruction_mode=reconstruction_mode,
+        )
+        max_state_bytes = max(max_state_bytes, _units_witness_bytes(current_state.units))
+        max_transition_bytes = max(
+            max_transition_bytes, int(current_state.metadata.get("transition_peak_bytes", 0))
+        )
+        max_ideal_pure_state_bytes = max(
+            max_ideal_pure_state_bytes, _pure_units_bytes(current_state.units)
+        )
+        max_ideal_pure_transition_bytes = max(
+            max_ideal_pure_transition_bytes, _ideal_pure_transition_bytes(current_state)
+        )
+
+    return AbstractExecutionFinalState(
+        final_state=current_state,
+        stats=AbstractExecutionStats(
+            max_state_bytes=max_state_bytes,
+            max_transition_bytes=max_transition_bytes,
+            max_ideal_pure_state_bytes=max_ideal_pure_state_bytes,
+            max_ideal_pure_transition_bytes=max_ideal_pure_transition_bytes,
+        ),
     )

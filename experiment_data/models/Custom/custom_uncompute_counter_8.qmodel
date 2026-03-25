@@ -1,0 +1,181 @@
+format: qmodel-v1
+program_name: custom_uncompute_counter_8
+metadata:
+  family: custom
+  pattern: uncompute_counterexample
+  n: 8
+  expected_judgment: violated
+qubits: [q0, q1, q2, q3, q4, q5, q6, q7]
+initial_state: zero
+gates:
+- name: CX
+  controls:
+  - q0
+  targets:
+  - q1
+  label: entangle-01
+- name: CCX
+  controls:
+  - q0
+  - q1
+  targets:
+  - q2
+  label: mark-012
+- name: CCX
+  controls:
+  - q0
+  - q1
+  targets:
+  - q2
+  label: unmark-012
+- name: CX
+  controls:
+  - q0
+  targets:
+  - q1
+  label: unentangle-01
+organization_schedule:
+  initial_state: s0
+  states:
+  - name: s0
+    units:
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    transition:
+      gate_index: 0
+      next_state: s1
+  - name: s1
+    units:
+    - name: u01
+      qubits:
+      - q0
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    transition:
+      gate_index: 1
+      next_state: s2
+  - name: s2
+    units:
+    - name: u012
+      qubits:
+      - q0
+      - q1
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    transition:
+      gate_index: 2
+      next_state: s3
+  - name: s3
+    units:
+    - name: u01
+      qubits:
+      - q0
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    transition:
+      gate_index: 3
+      next_state: s4
+  - name: s4
+    units:
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+assertion:
+  name: midway_mark_reachable
+  kind: reachability
+  target:
+    type: basis_state
+    scope:
+    - q2
+    state: '1'

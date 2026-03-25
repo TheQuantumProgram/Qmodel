@@ -1,0 +1,1171 @@
+format: qmodel-v1
+program_name: custom_disconnected_product_prob_20
+metadata:
+  family: custom
+  pattern: disconnected_product_probability
+  n: 20
+  expected_judgment: satisfied
+qubits: [q0, q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15, q16,
+  q17, q18, q19]
+initial_state: zero
+gates:
+- name: Ry
+  targets:
+  - q0
+  params:
+    theta: 1.0471975511965979
+  label: prepare-left-root
+- name: CX
+  controls:
+  - q0
+  targets:
+  - q1
+  label: left-01
+- name: CX
+  controls:
+  - q1
+  targets:
+  - q2
+  label: left-12
+- name: CX
+  controls:
+  - q2
+  targets:
+  - q3
+  label: left-23
+- name: CX
+  controls:
+  - q3
+  targets:
+  - q4
+  label: left-34
+- name: CX
+  controls:
+  - q4
+  targets:
+  - q5
+  label: left-45
+- name: X
+  targets:
+  - q6
+  label: set-mid-6
+- name: X
+  targets:
+  - q7
+  label: set-mid-7
+- name: H
+  targets:
+  - q10
+  label: prepare-right-root
+- name: CX
+  controls:
+  - q10
+  targets:
+  - q11
+  label: right-1011
+- name: CX
+  controls:
+  - q11
+  targets:
+  - q12
+  label: right-1112
+- name: CX
+  controls:
+  - q12
+  targets:
+  - q13
+  label: right-1213
+- name: CX
+  controls:
+  - q13
+  targets:
+  - q14
+  label: right-1314
+- name: CX
+  controls:
+  - q14
+  targets:
+  - q15
+  label: right-1415
+- name: X
+  targets:
+  - q16
+  label: set-tail-16
+- name: X
+  targets:
+  - q17
+  label: set-tail-17
+measurement:
+  qubits:
+  - q0
+  - q1
+  - q2
+  - q3
+  - q4
+  - q5
+  - q6
+  - q7
+  - q8
+  - q9
+  - q10
+  - q11
+  - q12
+  - q13
+  - q14
+  - q15
+  - q16
+  - q17
+  - q18
+  - q19
+  basis: computational
+organization_schedule:
+  initial_state: s0
+  states:
+  - name: s0
+    units:
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
+    - name: u10
+      qubits:
+      - q10
+    - name: u11
+      qubits:
+      - q11
+    - name: u12
+      qubits:
+      - q12
+    - name: u13
+      qubits:
+      - q13
+    - name: u14
+      qubits:
+      - q14
+    - name: u15
+      qubits:
+      - q15
+    - name: u16
+      qubits:
+      - q16
+    - name: u17
+      qubits:
+      - q17
+    - name: u18
+      qubits:
+      - q18
+    - name: u19
+      qubits:
+      - q19
+    transition:
+      gate_index: 0
+      next_state: s1
+  - name: s1
+    units:
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
+    - name: u10
+      qubits:
+      - q10
+    - name: u11
+      qubits:
+      - q11
+    - name: u12
+      qubits:
+      - q12
+    - name: u13
+      qubits:
+      - q13
+    - name: u14
+      qubits:
+      - q14
+    - name: u15
+      qubits:
+      - q15
+    - name: u16
+      qubits:
+      - q16
+    - name: u17
+      qubits:
+      - q17
+    - name: u18
+      qubits:
+      - q18
+    - name: u19
+      qubits:
+      - q19
+    transition:
+      gate_index: 1
+      next_state: s2
+  - name: s2
+    units:
+    - name: u01
+      qubits:
+      - q0
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
+    - name: u10
+      qubits:
+      - q10
+    - name: u11
+      qubits:
+      - q11
+    - name: u12
+      qubits:
+      - q12
+    - name: u13
+      qubits:
+      - q13
+    - name: u14
+      qubits:
+      - q14
+    - name: u15
+      qubits:
+      - q15
+    - name: u16
+      qubits:
+      - q16
+    - name: u17
+      qubits:
+      - q17
+    - name: u18
+      qubits:
+      - q18
+    - name: u19
+      qubits:
+      - q19
+    transition:
+      gate_index: 2
+      next_state: s3
+  - name: s3
+    units:
+    - name: u012
+      qubits:
+      - q0
+      - q1
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
+    - name: u10
+      qubits:
+      - q10
+    - name: u11
+      qubits:
+      - q11
+    - name: u12
+      qubits:
+      - q12
+    - name: u13
+      qubits:
+      - q13
+    - name: u14
+      qubits:
+      - q14
+    - name: u15
+      qubits:
+      - q15
+    - name: u16
+      qubits:
+      - q16
+    - name: u17
+      qubits:
+      - q17
+    - name: u18
+      qubits:
+      - q18
+    - name: u19
+      qubits:
+      - q19
+    transition:
+      gate_index: 3
+      next_state: s4
+  - name: s4
+    units:
+    - name: u012
+      qubits:
+      - q0
+      - q1
+      - q2
+    - name: u23
+      qubits:
+      - q2
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
+    - name: u10
+      qubits:
+      - q10
+    - name: u11
+      qubits:
+      - q11
+    - name: u12
+      qubits:
+      - q12
+    - name: u13
+      qubits:
+      - q13
+    - name: u14
+      qubits:
+      - q14
+    - name: u15
+      qubits:
+      - q15
+    - name: u16
+      qubits:
+      - q16
+    - name: u17
+      qubits:
+      - q17
+    - name: u18
+      qubits:
+      - q18
+    - name: u19
+      qubits:
+      - q19
+    transition:
+      gate_index: 4
+      next_state: s5
+  - name: s5
+    units:
+    - name: u012
+      qubits:
+      - q0
+      - q1
+      - q2
+    - name: u234
+      qubits:
+      - q2
+      - q3
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
+    - name: u10
+      qubits:
+      - q10
+    - name: u11
+      qubits:
+      - q11
+    - name: u12
+      qubits:
+      - q12
+    - name: u13
+      qubits:
+      - q13
+    - name: u14
+      qubits:
+      - q14
+    - name: u15
+      qubits:
+      - q15
+    - name: u16
+      qubits:
+      - q16
+    - name: u17
+      qubits:
+      - q17
+    - name: u18
+      qubits:
+      - q18
+    - name: u19
+      qubits:
+      - q19
+    transition:
+      gate_index: 5
+      next_state: s6
+  - name: s6
+    units:
+    - name: u012
+      qubits:
+      - q0
+      - q1
+      - q2
+    - name: u234
+      qubits:
+      - q2
+      - q3
+      - q4
+    - name: u45
+      qubits:
+      - q4
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
+    - name: u10
+      qubits:
+      - q10
+    - name: u11
+      qubits:
+      - q11
+    - name: u12
+      qubits:
+      - q12
+    - name: u13
+      qubits:
+      - q13
+    - name: u14
+      qubits:
+      - q14
+    - name: u15
+      qubits:
+      - q15
+    - name: u16
+      qubits:
+      - q16
+    - name: u17
+      qubits:
+      - q17
+    - name: u18
+      qubits:
+      - q18
+    - name: u19
+      qubits:
+      - q19
+    transition:
+      gate_index: 6
+      next_state: s7
+  - name: s7
+    units:
+    - name: u012
+      qubits:
+      - q0
+      - q1
+      - q2
+    - name: u234
+      qubits:
+      - q2
+      - q3
+      - q4
+    - name: u45
+      qubits:
+      - q4
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
+    - name: u10
+      qubits:
+      - q10
+    - name: u11
+      qubits:
+      - q11
+    - name: u12
+      qubits:
+      - q12
+    - name: u13
+      qubits:
+      - q13
+    - name: u14
+      qubits:
+      - q14
+    - name: u15
+      qubits:
+      - q15
+    - name: u16
+      qubits:
+      - q16
+    - name: u17
+      qubits:
+      - q17
+    - name: u18
+      qubits:
+      - q18
+    - name: u19
+      qubits:
+      - q19
+    transition:
+      gate_index: 7
+      next_state: s8
+  - name: s8
+    units:
+    - name: u012
+      qubits:
+      - q0
+      - q1
+      - q2
+    - name: u234
+      qubits:
+      - q2
+      - q3
+      - q4
+    - name: u45
+      qubits:
+      - q4
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
+    - name: u10
+      qubits:
+      - q10
+    - name: u11
+      qubits:
+      - q11
+    - name: u12
+      qubits:
+      - q12
+    - name: u13
+      qubits:
+      - q13
+    - name: u14
+      qubits:
+      - q14
+    - name: u15
+      qubits:
+      - q15
+    - name: u16
+      qubits:
+      - q16
+    - name: u17
+      qubits:
+      - q17
+    - name: u18
+      qubits:
+      - q18
+    - name: u19
+      qubits:
+      - q19
+    transition:
+      gate_index: 8
+      next_state: s9
+  - name: s9
+    units:
+    - name: u012
+      qubits:
+      - q0
+      - q1
+      - q2
+    - name: u234
+      qubits:
+      - q2
+      - q3
+      - q4
+    - name: u45
+      qubits:
+      - q4
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
+    - name: u10
+      qubits:
+      - q10
+    - name: u11
+      qubits:
+      - q11
+    - name: u12
+      qubits:
+      - q12
+    - name: u13
+      qubits:
+      - q13
+    - name: u14
+      qubits:
+      - q14
+    - name: u15
+      qubits:
+      - q15
+    - name: u16
+      qubits:
+      - q16
+    - name: u17
+      qubits:
+      - q17
+    - name: u18
+      qubits:
+      - q18
+    - name: u19
+      qubits:
+      - q19
+    transition:
+      gate_index: 9
+      next_state: s10
+  - name: s10
+    units:
+    - name: u012
+      qubits:
+      - q0
+      - q1
+      - q2
+    - name: u234
+      qubits:
+      - q2
+      - q3
+      - q4
+    - name: u45
+      qubits:
+      - q4
+      - q5
+    - name: u1011
+      qubits:
+      - q10
+      - q11
+    - name: u12
+      qubits:
+      - q12
+    - name: u13
+      qubits:
+      - q13
+    - name: u14
+      qubits:
+      - q14
+    - name: u15
+      qubits:
+      - q15
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
+    - name: u16
+      qubits:
+      - q16
+    - name: u17
+      qubits:
+      - q17
+    - name: u18
+      qubits:
+      - q18
+    - name: u19
+      qubits:
+      - q19
+    transition:
+      gate_index: 10
+      next_state: s11
+  - name: s11
+    units:
+    - name: u012
+      qubits:
+      - q0
+      - q1
+      - q2
+    - name: u234
+      qubits:
+      - q2
+      - q3
+      - q4
+    - name: u45
+      qubits:
+      - q4
+      - q5
+    - name: u101112
+      qubits:
+      - q10
+      - q11
+      - q12
+    - name: u13
+      qubits:
+      - q13
+    - name: u14
+      qubits:
+      - q14
+    - name: u15
+      qubits:
+      - q15
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
+    - name: u16
+      qubits:
+      - q16
+    - name: u17
+      qubits:
+      - q17
+    - name: u18
+      qubits:
+      - q18
+    - name: u19
+      qubits:
+      - q19
+    transition:
+      gate_index: 11
+      next_state: s12
+  - name: s12
+    units:
+    - name: u012
+      qubits:
+      - q0
+      - q1
+      - q2
+    - name: u234
+      qubits:
+      - q2
+      - q3
+      - q4
+    - name: u45
+      qubits:
+      - q4
+      - q5
+    - name: u101112
+      qubits:
+      - q10
+      - q11
+      - q12
+    - name: u1213
+      qubits:
+      - q12
+      - q13
+    - name: u14
+      qubits:
+      - q14
+    - name: u15
+      qubits:
+      - q15
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
+    - name: u16
+      qubits:
+      - q16
+    - name: u17
+      qubits:
+      - q17
+    - name: u18
+      qubits:
+      - q18
+    - name: u19
+      qubits:
+      - q19
+    transition:
+      gate_index: 12
+      next_state: s13
+  - name: s13
+    units:
+    - name: u012
+      qubits:
+      - q0
+      - q1
+      - q2
+    - name: u234
+      qubits:
+      - q2
+      - q3
+      - q4
+    - name: u45
+      qubits:
+      - q4
+      - q5
+    - name: u101112
+      qubits:
+      - q10
+      - q11
+      - q12
+    - name: u121314
+      qubits:
+      - q12
+      - q13
+      - q14
+    - name: u15
+      qubits:
+      - q15
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
+    - name: u16
+      qubits:
+      - q16
+    - name: u17
+      qubits:
+      - q17
+    - name: u18
+      qubits:
+      - q18
+    - name: u19
+      qubits:
+      - q19
+    transition:
+      gate_index: 13
+      next_state: s14
+  - name: s14
+    units:
+    - name: u012
+      qubits:
+      - q0
+      - q1
+      - q2
+    - name: u234
+      qubits:
+      - q2
+      - q3
+      - q4
+    - name: u45
+      qubits:
+      - q4
+      - q5
+    - name: u101112
+      qubits:
+      - q10
+      - q11
+      - q12
+    - name: u121314
+      qubits:
+      - q12
+      - q13
+      - q14
+    - name: u1415
+      qubits:
+      - q14
+      - q15
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
+    - name: u16
+      qubits:
+      - q16
+    - name: u17
+      qubits:
+      - q17
+    - name: u18
+      qubits:
+      - q18
+    - name: u19
+      qubits:
+      - q19
+    transition:
+      gate_index: 14
+      next_state: s15
+  - name: s15
+    units:
+    - name: u012
+      qubits:
+      - q0
+      - q1
+      - q2
+    - name: u234
+      qubits:
+      - q2
+      - q3
+      - q4
+    - name: u45
+      qubits:
+      - q4
+      - q5
+    - name: u101112
+      qubits:
+      - q10
+      - q11
+      - q12
+    - name: u121314
+      qubits:
+      - q12
+      - q13
+      - q14
+    - name: u1415
+      qubits:
+      - q14
+      - q15
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
+    - name: u16
+      qubits:
+      - q16
+    - name: u17
+      qubits:
+      - q17
+    - name: u18
+      qubits:
+      - q18
+    - name: u19
+      qubits:
+      - q19
+    transition:
+      gate_index: 15
+      next_state: s16
+  - name: s16
+    units:
+    - name: u012
+      qubits:
+      - q0
+      - q1
+      - q2
+    - name: u234
+      qubits:
+      - q2
+      - q3
+      - q4
+    - name: u45
+      qubits:
+      - q4
+      - q5
+    - name: u101112
+      qubits:
+      - q10
+      - q11
+      - q12
+    - name: u121314
+      qubits:
+      - q12
+      - q13
+      - q14
+    - name: u1415
+      qubits:
+      - q14
+      - q15
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
+    - name: u16
+      qubits:
+      - q16
+    - name: u17
+      qubits:
+      - q17
+    - name: u18
+      qubits:
+      - q18
+    - name: u19
+      qubits:
+      - q19
+assertion:
+  name: disconnected_product_probability
+  kind: probability
+  target:
+    type: measurement_outcome
+    scope:
+    - q0
+    - q1
+    - q2
+    - q3
+    - q4
+    - q5
+    - q6
+    - q7
+    - q8
+    - q9
+    - q10
+    - q11
+    - q12
+    - q13
+    - q14
+    - q15
+    - q16
+    - q17
+    - q18
+    - q19
+    outcomes:
+    - '11111111001111111100'
+  comparator: '='
+  threshold: 0.125

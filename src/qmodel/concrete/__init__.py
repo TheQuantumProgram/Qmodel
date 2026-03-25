@@ -3,6 +3,7 @@
 from .full_execution_analysis import (
     DEFAULT_FULL_EXECUTION_TIME_CUTOFF_QUBITS,
     abstract_ideal_pure_lower_bound,
+    build_comparison_payload_from_stats,
     build_comparison_payload,
     full_execution_baseline,
 )
@@ -23,6 +24,7 @@ __all__ = [
     "ConcreteBackendError",
     "abstract_ideal_pure_lower_bound",
     "build_comparison_payload",
+    "build_comparison_payload_from_stats",
     "build_exact_scope_state_provider",
     "build_circuit",
     "evaluate_assertion",

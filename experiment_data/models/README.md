@@ -37,3 +37,51 @@ This directory stores formal `.qmodel` instances used for actual experiments. Sm
 - `GHZ/ghz_20_root_p025.qmodel`
 - `GHZ/ghz_50_root_p075.qmodel`
   - biased-root GHZ variants using `Ry(theta)` on `q0` before the staircase `CX` chain
+- `BV/bv_10_sparse.qmodel`
+- `BV/bv_20_sparse.qmodel`
+- `BV/bv_50_sparse.qmodel`
+- `BV/bv_100_sparse.qmodel`
+- `BV/bv_150_sparse.qmodel`
+- `BV/bv_200_sparse.qmodel`
+  - sparse-oracle Bernstein-Vazirani family at the six planned qubit scales
+- `AIQFT/aiqft_10_w5.qmodel`
+- `AIQFT/aiqft_20_w5.qmodel`
+- `AIQFT/aiqft_50_w5.qmodel`
+- `AIQFT/aiqft_100_w5.qmodel`
+- `AIQFT/aiqft_150_w5.qmodel`
+- `AIQFT/aiqft_200_w5.qmodel`
+  - sliding-window approximate inverse-QFT recovery family with window size `5`
+- `Adder/adder_10.qmodel`
+- `Adder/adder_20.qmodel`
+- `Adder/adder_50.qmodel`
+- `Adder/adder_100.qmodel`
+- `Adder/adder_150.qmodel`
+- `Adder/adder_200.qmodel`
+  - ripple-carry adder family with dynamic carry-window schedules
+- `Grover/grover_10.qmodel`
+- `Grover/grover_20.qmodel`
+- `Grover/grover_50.qmodel`
+- `Grover/grover_100.qmodel`
+- `Grover/grover_150.qmodel`
+- `Grover/grover_200.qmodel`
+  - multi-solution Grover family with bounded local cores and joint marked-subspace assertions
+- `Custom/custom_overlap_chain_prob_6.qmodel`
+- `Custom/custom_back_edge_prob_6.qmodel`
+- `Custom/custom_split_merge_prob_8.qmodel`
+- `Custom/custom_ccx_ladder_reach_9.qmodel`
+- `Custom/custom_uncompute_reach_8.qmodel`
+- `Custom/custom_disconnected_product_prob_10.qmodel`
+- `Custom/custom_overlap_chain_counter_6.qmodel`
+- `Custom/custom_split_merge_counter_8.qmodel`
+- `Custom/custom_disconnected_product_counter_10.qmodel`
+- `Custom/custom_ccx_ladder_counter_9.qmodel`
+- `Custom/custom_uncompute_counter_8.qmodel`
+- `Custom/custom_overlap_chain_prob_12.qmodel`
+- `Custom/custom_back_edge_prob_12.qmodel`
+- `Custom/custom_split_merge_prob_14.qmodel`
+- `Custom/custom_ccx_ladder_reach_15.qmodel`
+- `Custom/custom_disconnected_product_prob_20.qmodel`
+  - current Custom suite includes:
+  - six small positive baselines
+  - five small counterexamples that should violate their assertions
+  - five medium positive models in the `10-20` qubit range

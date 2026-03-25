@@ -15,7 +15,7 @@ from qmodel.concrete.qiskit_backend import (
 from qmodel.spec import QuantumProgramSpec
 
 if TYPE_CHECKING:
-    from qmodel.abstract.transition import AbstractExecutionTrace
+    from qmodel.abstract.transition import AbstractExecutionStats, AbstractExecutionTrace
 
 
 COMPLEX128_BYTES = 16
@@ -57,6 +57,22 @@ def abstract_ideal_pure_lower_bound(trace: AbstractExecutionTrace) -> dict[str, 
         )
         max_transition_bytes = max(max_transition_bytes, transition_bytes)
 
+    max_execution_bytes = max(max_state_bytes, max_transition_bytes)
+    return {
+        "max_state_bytes": max_state_bytes,
+        "max_state_mib": _mib(max_state_bytes),
+        "max_transition_bytes": max_transition_bytes,
+        "max_transition_mib": _mib(max_transition_bytes),
+        "max_execution_bytes": max_execution_bytes,
+        "max_execution_mib": _mib(max_execution_bytes),
+    }
+
+
+def abstract_ideal_pure_lower_bound_from_stats(
+    stats: AbstractExecutionStats,
+) -> dict[str, float | int]:
+    max_state_bytes = stats.max_ideal_pure_state_bytes
+    max_transition_bytes = stats.max_ideal_pure_transition_bytes
     max_execution_bytes = max(max_state_bytes, max_transition_bytes)
     return {
         "max_state_bytes": max_state_bytes,
@@ -134,6 +150,21 @@ def build_comparison_payload(
 ) -> dict[str, Any]:
     return {
         "abstract_ideal_pure_lower_bound": abstract_ideal_pure_lower_bound(trace),
+        "full_execution": full_execution_baseline(
+            spec,
+            time_cutoff_qubits=time_cutoff_qubits,
+        ),
+    }
+
+
+def build_comparison_payload_from_stats(
+    stats: AbstractExecutionStats,
+    spec: QuantumProgramSpec,
+    *,
+    time_cutoff_qubits: int = DEFAULT_FULL_EXECUTION_TIME_CUTOFF_QUBITS,
+) -> dict[str, Any]:
+    return {
+        "abstract_ideal_pure_lower_bound": abstract_ideal_pure_lower_bound_from_stats(stats),
         "full_execution": full_execution_baseline(
             spec,
             time_cutoff_qubits=time_cutoff_qubits,

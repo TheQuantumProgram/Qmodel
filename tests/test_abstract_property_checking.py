@@ -10,7 +10,9 @@ from qmodel.abstract.property_checking import (
     evaluate_assertion,
     evaluate_reachability_assertion,
     evaluate_terminal_probability_assertion,
+    evaluate_terminal_probability_assertion_on_state,
     final_scope_witness,
+    final_scope_witness_from_state,
 )
 from qmodel.abstract.state import AbstractState, abstract_local_state
 from qmodel.abstract.transition import AbstractExecutionTrace, build_abstract_trace, reconstruct_scope_state
@@ -23,6 +25,13 @@ from qiskit.quantum_info import DensityMatrix
 _MODELS_DIR = Path(__file__).resolve().parent / "models"
 
 
+def _classical_density_matrix(width: int, probabilities: dict[str, float]) -> DensityMatrix:
+    diagonal = np.zeros(2**width, dtype=complex)
+    for bitstring, probability in probabilities.items():
+        diagonal[int(bitstring[::-1], 2)] = probability
+    return DensityMatrix(np.diag(diagonal))
+
+
 class AbstractPropertyCheckingTests(unittest.TestCase):
     def test_final_scope_witness_uses_single_final_view_when_available(self) -> None:
         spec = parse_qmodel_file(str(_MODELS_DIR / "clifford_bell.qmodel"))
@@ -32,6 +41,15 @@ class AbstractPropertyCheckingTests(unittest.TestCase):
 
         expected = trace.states[-1].units[0].witness_rho.data
         np.testing.assert_allclose(witness.data, expected)
+
+    def test_final_scope_witness_from_state_matches_trace_helper(self) -> None:
+        spec = parse_qmodel_file(str(_MODELS_DIR / "clifford_bell.qmodel"))
+        trace = build_abstract_trace(spec)
+
+        from_trace = final_scope_witness(trace, spec, ["q0", "q1"])
+        from_state = final_scope_witness_from_state(trace.states[-1], spec, ["q0", "q1"])
+
+        np.testing.assert_allclose(from_state.data, from_trace.data)
 
     def test_terminal_probability_assertion_matches_concrete_backend_for_single_view(self) -> None:
         spec = parse_qmodel_file(str(_MODELS_DIR / "clifford_bell.qmodel"))
@@ -45,6 +63,162 @@ class AbstractPropertyCheckingTests(unittest.TestCase):
         )
 
         self.assertAlmostEqual(result["probability"], expected_probability)
+        self.assertEqual(result["judgment"], "satisfied")
+
+    def test_terminal_probability_assertion_on_state_matches_trace_evaluator(self) -> None:
+        spec = parse_qmodel_file(str(_MODELS_DIR / "clifford_gate_showcase.qmodel"))
+        trace = build_abstract_trace(spec)
+
+        from_trace = evaluate_terminal_probability_assertion(trace, spec)
+        from_state = evaluate_terminal_probability_assertion_on_state(trace.states[-1], spec)
+
+        self.assertEqual(from_state, from_trace)
+
+    def test_single_basis_measurement_outcome_uses_chain_factorization(self) -> None:
+        spec = QuantumProgramSpec(
+            program_name="chain_basis_probability",
+            qubits=["q0", "q1", "q2", "q3", "q4", "q5"],
+            gates=[],
+            units=[
+                UnitSpec(name="u012", qubits=["q0", "q1", "q2"]),
+                UnitSpec(name="u234", qubits=["q2", "q3", "q4"]),
+                UnitSpec(name="u45", qubits=["q4", "q5"]),
+            ],
+            assertions=[
+                AssertionSpec(
+                    kind="probability",
+                    target={
+                        "type": "measurement_outcome",
+                        "scope": ["q0", "q1", "q2", "q3", "q4", "q5"],
+                        "outcomes": ["010101"],
+                    },
+                    comparator="=",
+                    threshold=0.4,
+                )
+            ],
+        )
+        state = AbstractState(
+            units=(
+                abstract_local_state(
+                    _classical_density_matrix(3, {"010": 0.4, "111": 0.6}),
+                    ["q0", "q1", "q2"],
+                    name="u012",
+                ),
+                abstract_local_state(
+                    _classical_density_matrix(3, {"010": 0.4, "111": 0.6}),
+                    ["q2", "q3", "q4"],
+                    name="u234",
+                ),
+                abstract_local_state(
+                    _classical_density_matrix(2, {"01": 0.4, "11": 0.6}),
+                    ["q4", "q5"],
+                    name="u45",
+                ),
+            ),
+            position=0,
+        )
+
+        result = evaluate_terminal_probability_assertion_on_state(state, spec)
+
+        self.assertAlmostEqual(result["probability"], 0.4)
+        self.assertEqual(result["judgment"], "satisfied")
+
+    def test_single_basis_measurement_outcome_multiplies_disconnected_components(self) -> None:
+        spec = QuantumProgramSpec(
+            program_name="disconnected_basis_probability",
+            qubits=["q0", "q1", "q2", "q3"],
+            gates=[],
+            units=[
+                UnitSpec(name="u01", qubits=["q0", "q1"]),
+                UnitSpec(name="u23", qubits=["q2", "q3"]),
+            ],
+            assertions=[
+                AssertionSpec(
+                    kind="probability",
+                    target={
+                        "type": "measurement_outcome",
+                        "scope": ["q0", "q1", "q2", "q3"],
+                        "outcomes": ["0110"],
+                    },
+                    comparator="=",
+                    threshold=0.125,
+                )
+            ],
+        )
+        state = AbstractState(
+            units=(
+                abstract_local_state(
+                    _classical_density_matrix(2, {"01": 0.5, "00": 0.5}),
+                    ["q0", "q1"],
+                    name="u01",
+                ),
+                abstract_local_state(
+                    _classical_density_matrix(2, {"10": 0.25, "00": 0.75}),
+                    ["q2", "q3"],
+                    name="u23",
+                ),
+            ),
+            position=0,
+        )
+
+        result = evaluate_terminal_probability_assertion_on_state(state, spec)
+
+        self.assertAlmostEqual(result["probability"], 0.125)
+        self.assertEqual(result["judgment"], "satisfied")
+
+    def test_single_basis_measurement_outcome_back_edge_without_new_qubits_has_no_effect(self) -> None:
+        spec = QuantumProgramSpec(
+            program_name="back_edge_basis_probability",
+            qubits=["q0", "q1", "q2", "q3", "q4", "q5"],
+            gates=[],
+            units=[
+                UnitSpec(name="u012", qubits=["q0", "q1", "q2"]),
+                UnitSpec(name="u234", qubits=["q2", "q3", "q4"]),
+                UnitSpec(name="u45", qubits=["q4", "q5"]),
+                UnitSpec(name="u15", qubits=["q1", "q5"]),
+            ],
+            assertions=[
+                AssertionSpec(
+                    kind="probability",
+                    target={
+                        "type": "measurement_outcome",
+                        "scope": ["q0", "q1", "q2", "q3", "q4", "q5"],
+                        "outcomes": ["010101"],
+                    },
+                    comparator="=",
+                    threshold=0.4,
+                )
+            ],
+        )
+        state = AbstractState(
+            units=(
+                abstract_local_state(
+                    _classical_density_matrix(3, {"010": 0.4, "111": 0.6}),
+                    ["q0", "q1", "q2"],
+                    name="u012",
+                ),
+                abstract_local_state(
+                    _classical_density_matrix(3, {"010": 0.4, "111": 0.6}),
+                    ["q2", "q3", "q4"],
+                    name="u234",
+                ),
+                abstract_local_state(
+                    _classical_density_matrix(2, {"01": 0.4, "11": 0.6}),
+                    ["q4", "q5"],
+                    name="u45",
+                ),
+                abstract_local_state(
+                    _classical_density_matrix(2, {"11": 0.4, "10": 0.6}),
+                    ["q1", "q5"],
+                    name="u15",
+                ),
+            ),
+            position=0,
+        )
+
+        result = evaluate_terminal_probability_assertion_on_state(state, spec)
+
+        self.assertAlmostEqual(result["probability"], 0.4)
         self.assertEqual(result["judgment"], "satisfied")
 
     def test_terminal_probability_assertion_matches_concrete_backend_for_multi_view_scope(self) -> None:

@@ -5,7 +5,7 @@ from pathlib import Path
 
 import numpy as np
 
-from qmodel.abstract.transition import build_abstract_trace
+from qmodel.abstract.transition import build_abstract_trace, execute_abstract_to_final_state
 from qmodel.spec import AssertionSpec, GateSpec, QuantumProgramSpec, UnitSpec
 from qmodel.parser.qmodel_parser import parse_qmodel_file
 
@@ -129,6 +129,35 @@ class AbstractTraceTests(unittest.TestCase):
         for unit in trace.states[0].units:
             self.assertEqual(unit.certificate_ids, ())
             self.assertEqual(unit.witness_rho.data.shape, (2**4, 2**4))
+
+    def test_execute_abstract_to_final_state_matches_trace_final_state_and_stats(self) -> None:
+        spec = parse_qmodel_file(str(_MODELS_DIR / "organization_schedule_chain.qmodel"))
+
+        trace = build_abstract_trace(spec)
+        execution = execute_abstract_to_final_state(spec)
+
+        self.assertEqual(execution.final_state.position, trace.states[-1].position)
+        self.assertEqual(
+            [unit.name for unit in execution.final_state.units],
+            [unit.name for unit in trace.states[-1].units],
+        )
+        for actual, expected in zip(execution.final_state.units, trace.states[-1].units, strict=True):
+            np.testing.assert_allclose(actual.witness_rho.data, expected.witness_rho.data)
+
+        self.assertEqual(
+            execution.stats.max_state_bytes,
+            max(
+                sum(int(unit.witness_rho.data.nbytes) for unit in state.units)
+                for state in trace.states
+            ),
+        )
+        self.assertEqual(
+            execution.stats.max_transition_bytes,
+            max(
+                int(transition.metadata.get("transition_peak_bytes", 0))
+                for transition in trace.transitions
+            ),
+        )
 
 
 if __name__ == "__main__":

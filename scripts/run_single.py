@@ -8,8 +8,17 @@ from pathlib import Path
 from time import perf_counter
 from typing import Any
 
-from qmodel.abstract import build_abstract_trace, evaluate_assertion
-from qmodel.concrete import build_comparison_payload, evaluate_assertion as evaluate_concrete_assertion
+from qmodel.abstract import (
+    build_abstract_trace,
+    evaluate_assertion,
+    evaluate_terminal_probability_assertion_on_state,
+    execute_abstract_to_final_state,
+)
+from qmodel.concrete import (
+    build_comparison_payload,
+    build_comparison_payload_from_stats,
+    evaluate_assertion as evaluate_concrete_assertion,
+)
 from qmodel.parser import parse_qmodel_file
 
 
@@ -45,17 +54,31 @@ def main() -> int:
     spec = parse_qmodel_file(str(model_path))
 
     abstract_start = perf_counter()
-    trace = build_abstract_trace(spec, reconstruction_mode=args.mode)
-    abstract_result = evaluate_assertion(trace, spec, reconstruction_mode=args.mode)
-    abstract_elapsed = perf_counter() - abstract_start
-    max_state_bytes = max((_abstract_state_bytes(state) for state in trace.states), default=0)
-    max_transition_bytes = max(
-        (
-            int(transition.metadata.get("transition_peak_bytes", 0))
-            for transition in trace.transitions
-        ),
-        default=0,
-    )
+    if spec.assertions[0].kind == "probability":
+        execution = execute_abstract_to_final_state(spec, reconstruction_mode=args.mode)
+        abstract_result = evaluate_terminal_probability_assertion_on_state(
+            execution.final_state,
+            spec,
+            reconstruction_mode=args.mode,
+        )
+        abstract_elapsed = perf_counter() - abstract_start
+        max_state_bytes = execution.stats.max_state_bytes
+        max_transition_bytes = execution.stats.max_transition_bytes
+        comparison_payload = build_comparison_payload_from_stats(execution.stats, spec)
+    else:
+        trace = build_abstract_trace(spec, reconstruction_mode=args.mode)
+        abstract_result = evaluate_assertion(trace, spec, reconstruction_mode=args.mode)
+        abstract_elapsed = perf_counter() - abstract_start
+        max_state_bytes = max((_abstract_state_bytes(state) for state in trace.states), default=0)
+        max_transition_bytes = max(
+            (
+                int(transition.metadata.get("transition_peak_bytes", 0))
+                for transition in trace.transitions
+            ),
+            default=0,
+        )
+        comparison_payload = build_comparison_payload(trace, spec)
+
     max_execution_bytes = max(max_state_bytes, max_transition_bytes)
     abstract_result = {
         **abstract_result,
@@ -67,7 +90,6 @@ def main() -> int:
         "max_execution_bytes": max_execution_bytes,
         "max_execution_mib": max_execution_bytes / (1024 * 1024),
     }
-    comparison_payload = build_comparison_payload(trace, spec)
     concrete_result: dict[str, Any]
     if args.run_concrete:
         concrete_result = _evaluate_concrete(spec)

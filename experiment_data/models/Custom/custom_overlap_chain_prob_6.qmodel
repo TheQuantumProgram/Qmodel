@@ -1,0 +1,214 @@
+format: qmodel-v1
+program_name: custom_overlap_chain_prob_6
+metadata:
+  family: custom
+  pattern: overlap_chain_probability
+  n: 6
+  expected_judgment: satisfied
+qubits: [q0, q1, q2, q3, q4, q5]
+initial_state: zero
+gates:
+- name: Ry
+  targets:
+  - q0
+  params:
+    theta: 1.0471975511965979
+  label: prepare-root-biased
+- name: CX
+  controls:
+  - q0
+  targets:
+  - q1
+  label: chain-01
+- name: CX
+  controls:
+  - q1
+  targets:
+  - q2
+  label: chain-12
+- name: CX
+  controls:
+  - q2
+  targets:
+  - q3
+  label: chain-23
+- name: CX
+  controls:
+  - q3
+  targets:
+  - q4
+  label: chain-34
+- name: CX
+  controls:
+  - q4
+  targets:
+  - q5
+  label: chain-45
+measurement:
+  qubits:
+  - q0
+  - q1
+  - q2
+  - q3
+  - q4
+  - q5
+  basis: computational
+organization_schedule:
+  initial_state: s0
+  states:
+  - name: s0
+    units:
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    transition:
+      gate_index: 0
+      next_state: s1
+  - name: s1
+    units:
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    transition:
+      gate_index: 1
+      next_state: s2
+  - name: s2
+    units:
+    - name: u01
+      qubits:
+      - q0
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    transition:
+      gate_index: 2
+      next_state: s3
+  - name: s3
+    units:
+    - name: u012
+      qubits:
+      - q0
+      - q1
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    transition:
+      gate_index: 3
+      next_state: s4
+  - name: s4
+    units:
+    - name: u012
+      qubits:
+      - q0
+      - q1
+      - q2
+    - name: u23
+      qubits:
+      - q2
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    transition:
+      gate_index: 4
+      next_state: s5
+  - name: s5
+    units:
+    - name: u012
+      qubits:
+      - q0
+      - q1
+      - q2
+    - name: u234
+      qubits:
+      - q2
+      - q3
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    transition:
+      gate_index: 5
+      next_state: s6
+  - name: s6
+    units:
+    - name: u012
+      qubits:
+      - q0
+      - q1
+      - q2
+    - name: u234
+      qubits:
+      - q2
+      - q3
+      - q4
+    - name: u45
+      qubits:
+      - q4
+      - q5
+assertion:
+  name: chain_basis_probability
+  kind: probability
+  target:
+    type: measurement_outcome
+    scope:
+    - q0
+    - q1
+    - q2
+    - q3
+    - q4
+    - q5
+    outcomes:
+    - '111111'
+  comparator: '='
+  threshold: 0.25
