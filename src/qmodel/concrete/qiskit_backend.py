@@ -293,6 +293,41 @@ def measurement_outcome_probability(
     return probability
 
 
+def _measurement_outcome_probability_from_statevector(
+    state: Statevector,
+    spec: QuantumProgramSpec,
+    scope: list[str],
+    outcomes: list[str],
+) -> float:
+    if not outcomes:
+        raise ConcreteBackendError("measurement outcome set must be non-empty")
+
+    qubit_index = {name: index for index, name in enumerate(spec.qubits)}
+    unknown_scope = [name for name in scope if name not in qubit_index]
+    if unknown_scope:
+        raise ConcreteBackendError(f"Unknown qubits in assertion scope: {unknown_scope}")
+
+    outcome_width = len(scope)
+    normalized_outcomes = {outcome.strip() for outcome in outcomes}
+    for outcome in normalized_outcomes:
+        if len(outcome) != outcome_width or any(bit not in "01" for bit in outcome):
+            raise ConcreteBackendError(
+                f"Invalid measurement outcome {outcome!r} for scope width {outcome_width}"
+            )
+
+    probability = 0.0
+    for basis_index, amplitude in enumerate(state.data):
+        basis_probability = float(abs(amplitude) ** 2)
+        if basis_probability == 0.0:
+            continue
+        full_bits = _basis_bitstring(basis_index, len(spec.qubits))
+        scoped_bits = "".join(full_bits[qubit_index[name]] for name in scope)
+        if scoped_bits in normalized_outcomes:
+            probability += basis_probability
+
+    return probability
+
+
 def _single_bit_probability_from_statevector(
     state: Statevector,
     qubit_index: int,
@@ -319,6 +354,30 @@ def bitwise_measurement_outcome_probability(
     """Compute the per-qubit probability mass for a bitwise terminal assertion."""
 
     state = simulate_statevector(spec)
+    qubit_index = {name: index for index, name in enumerate(spec.qubits)}
+
+    unknown_scope = [name for name in scope if name not in qubit_index]
+    if unknown_scope:
+        raise ConcreteBackendError(f"Unknown qubits in assertion scope: {unknown_scope}")
+
+    normalized_outcome = outcome.strip()
+    if len(normalized_outcome) != len(scope) or any(bit not in "01" for bit in normalized_outcome):
+        raise ConcreteBackendError(
+            f"Invalid bitwise measurement outcome {outcome!r} for scope width {len(scope)}"
+        )
+
+    return [
+        _single_bit_probability_from_statevector(state, qubit_index[qubit_name], expected_bit)
+        for qubit_name, expected_bit in zip(scope, normalized_outcome, strict=True)
+    ]
+
+
+def _bitwise_measurement_outcome_probability_from_statevector(
+    state: Statevector,
+    spec: QuantumProgramSpec,
+    scope: list[str],
+    outcome: str,
+) -> list[float]:
     qubit_index = {name: index for index, name in enumerate(spec.qubits)}
 
     unknown_scope = [name for name in scope if name not in qubit_index]
@@ -374,11 +433,10 @@ def evaluate_reachability_assertion(spec: QuantumProgramSpec) -> dict[str, float
     }
 
 
-def evaluate_probability_assertion(spec: QuantumProgramSpec) -> dict[str, float | str]:
-    """Evaluate the single terminal probability assertion stored in the specification."""
-
-    validate_program_spec(spec)
-
+def _evaluate_probability_assertion_from_statevector(
+    spec: QuantumProgramSpec,
+    state: Statevector,
+) -> dict[str, float | str]:
     if len(spec.assertions) != 1:
         raise ConcreteBackendError("Probability evaluation expects exactly one assertion")
 
@@ -403,7 +461,7 @@ def evaluate_probability_assertion(spec: QuantumProgramSpec) -> dict[str, float 
             raise ConcreteBackendError(
                 "measurement_outcome probability assertions require a string-list 'outcomes' field"
             )
-        probability = measurement_outcome_probability(spec, scope, outcomes)
+        probability = _measurement_outcome_probability_from_statevector(state, spec, scope, outcomes)
         bitwise_probabilities = None
     else:
         outcome = assertion.target.get("outcome")
@@ -411,7 +469,9 @@ def evaluate_probability_assertion(spec: QuantumProgramSpec) -> dict[str, float 
             raise ConcreteBackendError(
                 "bitwise_measurement_outcome probability assertions require a non-empty 'outcome' field"
             )
-        bitwise_probabilities = bitwise_measurement_outcome_probability(spec, scope, outcome)
+        bitwise_probabilities = _bitwise_measurement_outcome_probability_from_statevector(
+            state, spec, scope, outcome
+        )
         probability = min(bitwise_probabilities) if comparator != "<=" else max(bitwise_probabilities)
 
     if comparator == ">=":
@@ -459,6 +519,14 @@ def evaluate_probability_assertion(spec: QuantumProgramSpec) -> dict[str, float 
     if bitwise_probabilities is not None:
         result["bitwise_probabilities"] = bitwise_probabilities
     return result
+
+
+def evaluate_probability_assertion(spec: QuantumProgramSpec) -> dict[str, float | str]:
+    """Evaluate the single terminal probability assertion stored in the specification."""
+
+    validate_program_spec(spec)
+    state = simulate_statevector(spec)
+    return _evaluate_probability_assertion_from_statevector(spec, state)
 
 
 def evaluate_assertion(spec: QuantumProgramSpec) -> dict[str, Any]:

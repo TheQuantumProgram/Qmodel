@@ -6,7 +6,12 @@ from time import perf_counter
 from typing import TYPE_CHECKING, Any, Sequence
 
 from qmodel.abstract.state import AbstractUnitState
-from qmodel.concrete.qiskit_backend import ConcreteBackendError, simulate_statevector
+from qmodel.concrete.qiskit_backend import (
+    ConcreteBackendError,
+    _evaluate_probability_assertion_from_statevector,
+    evaluate_assertion,
+    simulate_statevector,
+)
 from qmodel.spec import QuantumProgramSpec
 
 if TYPE_CHECKING:
@@ -82,12 +87,27 @@ def full_execution_baseline(
     else:
         try:
             start = perf_counter()
-            simulate_statevector(spec)
-            elapsed = perf_counter() - start
+            state = simulate_statevector(spec)
+            statevector_elapsed = perf_counter() - start
+            assertion_elapsed: float | None = None
+            concrete_backend_elapsed: float
+
+            if len(spec.assertions) == 1 and spec.assertions[0].kind == "probability":
+                assertion_start = perf_counter()
+                _evaluate_probability_assertion_from_statevector(spec, state)
+                assertion_elapsed = perf_counter() - assertion_start
+                concrete_backend_elapsed = statevector_elapsed + assertion_elapsed
+            else:
+                concrete_start = perf_counter()
+                evaluate_assertion(spec)
+                concrete_backend_elapsed = perf_counter() - concrete_start
+
             time_benchmark = {
                 "mode": "measured",
                 "cutoff_qubits": time_cutoff_qubits,
-                "statevector_elapsed_seconds": elapsed,
+                "statevector_elapsed_seconds": statevector_elapsed,
+                "concrete_backend_elapsed_seconds": concrete_backend_elapsed,
+                "assertion_evaluation_seconds": assertion_elapsed,
             }
         except ConcreteBackendError as exc:
             time_benchmark = {

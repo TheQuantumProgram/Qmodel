@@ -86,13 +86,14 @@ def select_reconstruction_support_units(
             gain = len(set(unit.qubits) & uncovered)
             if gain == 0:
                 continue
+            connected_overlap = len(set(unit.qubits) & covered)
             leftmost = min(global_qubits.index(qubit) for qubit in unit.qubits)
-            candidates.append(( -gain, len(unit.qubits), leftmost, unit))
+            candidates.append((-gain, -connected_overlap, len(unit.qubits), leftmost, unit))
 
         if not candidates:
             raise ValueError("Current pre-state units do not cover the requested workspace")
 
-        _, _, _, chosen = min(candidates)
+        _, _, _, _, chosen = min(candidates)
         selected.append(chosen)
         selected_ids.add(_unit_identity(chosen.name, chosen.qubits))
         covered.update(chosen.qubits)
@@ -240,6 +241,70 @@ def _tensor_join(
     )
 
 
+def _is_diagonal_density_matrix(rho: DensityMatrix, tol: float = 1e-9) -> bool:
+    diagonal = np.diag(np.diag(rho.data))
+    return np.allclose(rho.data, diagonal, atol=tol, rtol=tol)
+
+
+def _probability_map(rho: DensityMatrix) -> dict[str, float]:
+    width = rho.num_qubits
+    probabilities = {}
+    for basis_index, basis_probability in enumerate(rho.probabilities()):
+        probabilities[format(basis_index, f"0{width}b")[::-1]] = float(
+            np.real_if_close(basis_probability)
+        )
+    return probabilities
+
+
+def _classical_overlap_join(
+    left_rho: DensityMatrix,
+    left_qubits: Sequence[str],
+    right_rho: DensityMatrix,
+    right_qubits: Sequence[str],
+    target_order: Sequence[str],
+    tol: float = 1e-12,
+) -> DensityMatrix:
+    overlap = [qubit for qubit in left_qubits if qubit in right_qubits]
+    if not overlap:
+        return _tensor_join(left_rho, left_qubits, right_rho, right_qubits, target_order)
+
+    left_probabilities = _probability_map(left_rho)
+    right_probabilities = _probability_map(right_rho)
+    overlap_probabilities = _probability_map(_reduce_scope(left_rho, left_qubits, overlap))
+    target_positions = {qubit: index for index, qubit in enumerate(target_order)}
+    diagonal = np.zeros(2 ** len(target_order), dtype=complex)
+
+    for left_bits, left_probability in left_probabilities.items():
+        if left_probability <= tol:
+            continue
+        left_overlap = "".join(left_bits[list(left_qubits).index(qubit)] for qubit in overlap)
+        overlap_probability = overlap_probabilities.get(left_overlap, 0.0)
+        if overlap_probability <= tol:
+            continue
+
+        for right_bits, right_probability in right_probabilities.items():
+            if right_probability <= tol:
+                continue
+            right_overlap = "".join(right_bits[list(right_qubits).index(qubit)] for qubit in overlap)
+            if left_overlap != right_overlap:
+                continue
+
+            union_bits = ["0"] * len(target_order)
+            for qubit, bit in zip(left_qubits, left_bits, strict=True):
+                union_bits[target_positions[qubit]] = bit
+            for qubit, bit in zip(right_qubits, right_bits, strict=True):
+                union_bits[target_positions[qubit]] = bit
+
+            diagonal[int("".join(union_bits)[::-1], 2)] = (
+                left_probability * right_probability / overlap_probability
+            )
+
+    total_probability = float(np.real_if_close(diagonal.sum()))
+    if total_probability > tol:
+        diagonal /= total_probability
+    return DensityMatrix(np.diag(diagonal))
+
+
 def _shared_certificate_cover(
     state: AbstractState,
     units: Sequence[AbstractUnitState],
@@ -298,6 +363,21 @@ def _reconstruct_workspace_state(
                     pair_certificate.qubits,
                     assembled_qubits,
                 )
+                assembled_units.append(unit)
+                continue
+
+            union_qubits = _ordered_union(global_qubits, [assembled_qubits, unit.qubits])
+            if _is_diagonal_density_matrix(assembled_rho) and _is_diagonal_density_matrix(
+                unit.witness_rho
+            ):
+                assembled_rho = _classical_overlap_join(
+                    assembled_rho,
+                    assembled_qubits,
+                    unit.witness_rho,
+                    unit.qubits,
+                    union_qubits,
+                )
+                assembled_qubits = union_qubits
                 assembled_units.append(unit)
                 continue
 

@@ -64,6 +64,12 @@ Current GHZ formal models:
 - standard staircase GHZ: `n = 10, 20, 50, 100, 150, 200`
 - biased-root staircase GHZ: `n = 20` with `p(root=1)=0.25`, and `n = 50` with `p(root=1)=0.75`
 
+Current BV formal models:
+- sparse-oracle BV: `n = 10, 20, 50, 100, 150, 200`
+
+Current AIQFT formal models:
+- sliding-window AIQFT recovery: `n = 10, 20, 50, 100, 150, 200`, all with window size `5`
+
 Current limitations:
 - the benchmark-running scripts in `scripts/` are still placeholders
 - tolerant reconstruction across overlapping units is still heuristic when no direct shared certificate covers the full requested workspace
@@ -78,7 +84,21 @@ Runner behavior:
 - `scripts/run_single.py` also emits a `comparison` block with:
   - an abstract ideal pure-state lower-bound estimate
   - exact full-execution statevector/density-matrix space formulas
-  - optional full statevector timing when the qubit count is below the automatic cutoff
+  - optional full-execution timing when the qubit count is below the automatic cutoff
+
+Current timing fields:
+- `abstract.elapsed_seconds`
+  - abstract backend only
+  - includes abstract trace construction plus abstract assertion checking
+- `comparison.full_execution.time_benchmark.statevector_elapsed_seconds`
+  - concrete full-execution baseline for exact terminal statevector simulation only
+- `comparison.full_execution.time_benchmark.assertion_evaluation_seconds`
+  - concrete assertion-checking time after the statevector is already available
+- `comparison.full_execution.time_benchmark.concrete_backend_elapsed_seconds`
+  - concrete full-execution baseline time for `statevector + assertion evaluation`
+- `total_elapsed_seconds`
+  - whole `run_single.py` wall-clock time
+  - includes abstract execution, optional full-execution timing, JSON assembly, and other runner overhead
 
 Current full-execution timing cutoff:
 - `22` qubits
