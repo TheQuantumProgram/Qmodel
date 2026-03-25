@@ -5,12 +5,16 @@ import unittest
 from pathlib import Path
 
 from qmodel.benchmarks.generators import (
+    ADDER_STANDARD_SIZES,
+    build_adder_payload,
+    build_adder_family_payloads,
     build_aiqft_family_payloads,
     build_aiqft_payload,
-    build_ghz_family_payloads,
-    build_ghz_staircase_payload,
     build_bv_family_payloads,
     build_bv_payload,
+    build_ghz_family_payloads,
+    build_ghz_staircase_payload,
+    emit_adder_family_models,
     emit_aiqft_family_models,
     emit_bv_family_models,
     write_qmodel_payload,
@@ -144,6 +148,18 @@ class BVGeneratorTests(unittest.TestCase):
         self.assertEqual(spec.assertions[0].target["type"], "bitwise_measurement_outcome")
         self.assertEqual(spec.assertions[0].target["outcome"], payload["assertion"]["target"]["outcome"])
         self.assertNotIn("outcomes", spec.assertions[0].target)
+
+    def test_write_qmodel_payload_uses_inline_top_level_qubits_without_yaml_aliases(self) -> None:
+        payload = build_bv_payload(10)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "bv_generated.qmodel"
+            write_qmodel_payload(payload, path)
+            text = path.read_text(encoding="utf-8")
+
+        self.assertIn("qubits: [q0, q1, q2, q3, q4, q5, q6, q7, q8, q9]", text)
+        self.assertNotIn("&id", text)
+        self.assertNotIn("*id", text)
 
     def test_reject_bitwise_probability_assertion_without_outcome_field(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -286,6 +302,119 @@ class AIQFTGeneratorTests(unittest.TestCase):
             spec = parse_qmodel_file(str(path))
             self.assertTrue(spec.program_name.startswith("aiqft_"))
             self.assertEqual(spec.metadata["family"], "aiqft")
+            self.assertEqual(len(spec.assertions), 1)
+
+
+class AdderGeneratorTests(unittest.TestCase):
+    def test_build_adder_payload_for_n10_uses_ccx_ripple_carry_structure(self) -> None:
+        payload = build_adder_payload(10)
+
+        self.assertEqual(payload["program_name"], "adder_10")
+        self.assertEqual(payload["metadata"]["family"], "adder")
+        self.assertEqual(payload["metadata"]["n"], 10)
+        self.assertEqual(payload["metadata"]["register_bits"], 4)
+        self.assertEqual(len(payload["qubits"]), 10)
+        self.assertEqual(payload["gates"][0]["name"], "X")
+        self.assertIn("CCX", {gate["name"] for gate in payload["gates"]})
+        self.assertEqual(payload["organization_schedule"]["initial_state"], "s0")
+        self.assertEqual(
+            len(payload["organization_schedule"]["states"]),
+            len(payload["gates"]) + 1,
+        )
+        self.assertTrue(
+            all(len(unit["qubits"]) == 1 for unit in payload["organization_schedule"]["states"][0]["units"])
+        )
+        self.assertTrue(
+            all(len(unit["qubits"]) == 1 for unit in payload["organization_schedule"]["states"][-1]["units"])
+        )
+        middle_unit_sizes = [
+            len(unit["qubits"])
+            for state in payload["organization_schedule"]["states"][1:-1]
+            for unit in state["units"]
+        ]
+        self.assertIn(2, middle_unit_sizes)
+        self.assertIn(3, middle_unit_sizes)
+        self.assertEqual(payload["assertion"]["target"]["type"], "bitwise_measurement_outcome")
+        self.assertEqual(payload["assertion"]["comparator"], ">=")
+        self.assertEqual(payload["assertion"]["threshold"], 0.999999)
+        self.assertEqual(len(payload["assertion"]["target"]["scope"]), 10)
+        self.assertEqual(len(payload["assertion"]["target"]["outcome"]), 10)
+
+    def test_write_generated_adder_payload_round_trips_through_parser(self) -> None:
+        payload = build_adder_payload(50)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "adder_generated.qmodel"
+            write_qmodel_payload(payload, path)
+            spec = parse_qmodel_file(str(path))
+
+        self.assertEqual(spec.program_name, "adder_50")
+        self.assertEqual(spec.metadata["family"], "adder")
+        self.assertEqual(spec.metadata["register_bits"], 24)
+        self.assertEqual(spec.assertions[0].target["type"], "bitwise_measurement_outcome")
+        self.assertEqual(spec.assertions[0].threshold, 0.999999)
+        self.assertEqual(len(spec.organization_schedule.states), len(payload["gates"]) + 1)
+
+    def test_build_adder_family_payloads_covers_all_expected_sizes(self) -> None:
+        payloads = build_adder_family_payloads()
+        names = [payload["program_name"] for payload in payloads]
+
+        self.assertEqual(ADDER_STANDARD_SIZES, (10, 20, 50, 100, 150, 200))
+        self.assertEqual(
+            names,
+            [
+                "adder_10",
+                "adder_20",
+                "adder_50",
+                "adder_100",
+                "adder_150",
+                "adder_200",
+            ],
+        )
+
+    def test_emit_adder_family_models_writes_six_files_in_tempdir(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            written_paths = emit_adder_family_models(tmpdir)
+            self.assertEqual(len(written_paths), 6)
+            self.assertEqual(
+                [path.name for path in written_paths],
+                [
+                    "adder_10.qmodel",
+                    "adder_20.qmodel",
+                    "adder_50.qmodel",
+                    "adder_100.qmodel",
+                    "adder_150.qmodel",
+                    "adder_200.qmodel",
+                ],
+            )
+            for path in written_paths:
+                self.assertTrue(path.exists(), path)
+                spec = parse_qmodel_file(str(path))
+                self.assertTrue(spec.program_name.startswith("adder_"))
+
+    def test_formal_adder_models_parse(self) -> None:
+        base = Path(
+            "/home/li/project/QCE-2026/project_code/experiment_data/models/Adder"
+        )
+        paths = sorted(
+            (path for path in base.glob("*.qmodel") if path.name != ".gitkeep"),
+            key=lambda path: int(path.stem.split("_")[1]),
+        )
+        self.assertEqual(
+            [path.name for path in paths],
+            [
+                "adder_10.qmodel",
+                "adder_20.qmodel",
+                "adder_50.qmodel",
+                "adder_100.qmodel",
+                "adder_150.qmodel",
+                "adder_200.qmodel",
+            ],
+        )
+        for path in paths:
+            spec = parse_qmodel_file(str(path))
+            self.assertTrue(spec.program_name.startswith("adder_"))
+            self.assertEqual(spec.metadata["family"], "adder")
             self.assertEqual(len(spec.assertions), 1)
 
 

@@ -3,105 +3,144 @@ program_name: clifford_gate_showcase
 metadata:
   family: clifford
   n: 3
-
 qubits: [q0, q1, q2]
 initial_state: zero
-
 gates:
-  - name: H
-    targets: [q0]
-    label: create-superposition
-  - name: S
-    targets: [q0]
-    label: phase-s
-  - name: X
-    targets: [q1]
-    label: flip-q1
-  - name: Z
-    targets: [q1]
-    label: phase-z
-  - name: CZ
-    controls: [q0]
-    targets: [q1]
-    label: controlled-phase
-  - name: SWAP
-    targets: [q1, q2]
-    label: exchange-q1-q2
-
+- name: H
+  targets:
+  - q0
+  label: create-superposition
+- name: S
+  targets:
+  - q0
+  label: phase-s
+- name: X
+  targets:
+  - q1
+  label: flip-q1
+- name: Z
+  targets:
+  - q1
+  label: phase-z
+- name: CZ
+  controls:
+  - q0
+  targets:
+  - q1
+  label: controlled-phase
+- name: SWAP
+  targets:
+  - q1
+  - q2
+  label: exchange-q1-q2
 measurement:
-  qubits: [q0, q1, q2]
+  qubits:
+  - q0
+  - q1
+  - q2
   basis: computational
-
 organization_schedule:
   initial_state: s0
   states:
-    - name: s0
-      units:
-        - name: left_pair
-          qubits: [q0, q1]
-        - name: right_pair
-          qubits: [q1, q2]
-      transition:
-        gate_index: 0
-        next_state: s1
-    - name: s1
-      units:
-        - name: left_pair
-          qubits: [q0, q1]
-        - name: right_pair
-          qubits: [q1, q2]
-      transition:
-        gate_index: 1
-        next_state: s2
-    - name: s2
-      units:
-        - name: left_pair
-          qubits: [q0, q1]
-        - name: right_pair
-          qubits: [q1, q2]
-      transition:
-        gate_index: 2
-        next_state: s3
-    - name: s3
-      units:
-        - name: left_pair
-          qubits: [q0, q1]
-        - name: right_pair
-          qubits: [q1, q2]
-      transition:
-        gate_index: 3
-        next_state: s4
-    - name: s4
-      units:
-        - name: left_pair
-          qubits: [q0, q1]
-        - name: right_pair
-          qubits: [q1, q2]
-      transition:
-        gate_index: 4
-        next_state: s5
-    - name: s5
-      units:
-        - name: left_pair
-          qubits: [q0, q1]
-        - name: right_pair
-          qubits: [q1, q2]
-      transition:
-        gate_index: 5
-        next_state: s6
-    - name: s6
-      units:
-        - name: left_pair
-          qubits: [q0, q1]
-        - name: right_pair
-          qubits: [q1, q2]
-
+  - name: s0
+    units:
+    - name: left_pair
+      qubits:
+      - q0
+      - q1
+    - name: right_pair
+      qubits:
+      - q1
+      - q2
+    transition:
+      gate_index: 0
+      next_state: s1
+  - name: s1
+    units:
+    - name: left_pair
+      qubits:
+      - q0
+      - q1
+    - name: right_pair
+      qubits:
+      - q1
+      - q2
+    transition:
+      gate_index: 1
+      next_state: s2
+  - name: s2
+    units:
+    - name: left_pair
+      qubits:
+      - q0
+      - q1
+    - name: right_pair
+      qubits:
+      - q1
+      - q2
+    transition:
+      gate_index: 2
+      next_state: s3
+  - name: s3
+    units:
+    - name: left_pair
+      qubits:
+      - q0
+      - q1
+    - name: right_pair
+      qubits:
+      - q1
+      - q2
+    transition:
+      gate_index: 3
+      next_state: s4
+  - name: s4
+    units:
+    - name: left_pair
+      qubits:
+      - q0
+      - q1
+    - name: right_pair
+      qubits:
+      - q1
+      - q2
+    transition:
+      gate_index: 4
+      next_state: s5
+  - name: s5
+    units:
+    - name: left_pair
+      qubits:
+      - q0
+      - q1
+    - name: right_pair
+      qubits:
+      - q1
+      - q2
+    transition:
+      gate_index: 5
+      next_state: s6
+  - name: s6
+    units:
+    - name: left_pair
+      qubits:
+      - q0
+      - q1
+    - name: right_pair
+      qubits:
+      - q1
+      - q2
 assertion:
   name: terminal_distribution_check
   kind: probability
   target:
     type: measurement_outcome
-    scope: [q0, q1, q2]
-    outcomes: ["001", "101"]
-  comparator: ">="
+    scope:
+    - q0
+    - q1
+    - q2
+    outcomes:
+    - '001'
+    - '101'
+  comparator: '>='
   threshold: 0.0

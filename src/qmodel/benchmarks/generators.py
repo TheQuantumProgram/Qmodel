@@ -23,6 +23,29 @@ AIQFT_FAMILY_VARIANTS = (
     (150, 5),
     (200, 5),
 )
+ADDER_STANDARD_SIZES = (10, 20, 50, 100, 150, 200)
+
+
+class _FlowList(list[str]):
+    """Emit selected YAML sequences in flow style."""
+
+
+class _QModelDumper(yaml.SafeDumper):
+    def ignore_aliases(self, data: Any) -> bool:  # type: ignore[override]
+        return True
+
+
+def _represent_flow_list(
+    dumper: yaml.SafeDumper, data: _FlowList
+) -> yaml.nodes.SequenceNode:
+    return dumper.represent_sequence(
+        "tag:yaml.org,2002:seq",
+        list(data),
+        flow_style=True,
+    )
+
+
+_QModelDumper.add_representer(_FlowList, _represent_flow_list)
 
 
 def _probability_tag(probability: float) -> str:
@@ -37,6 +60,14 @@ def _ry_theta_for_probability(probability: float) -> float:
 
 def _unit_entry(name: str, qubits: list[str]) -> dict[str, Any]:
     return {"name": name, "qubits": qubits}
+
+
+def _bits_to_int_lsb_first(bits: str) -> int:
+    return sum(int(bit) << index for index, bit in enumerate(bits))
+
+
+def _int_to_bits_lsb_first(value: int, width: int) -> str:
+    return "".join("1" if (value >> index) & 1 else "0" for index in range(width))
 
 
 def _distributed_positions(length: int, count: int) -> list[int]:
@@ -101,6 +132,26 @@ def _single_qubit_states(qubit_names: list[str], gate_count: int) -> list[dict[s
     return states
 
 
+def _singleton_units(qubit_names: list[str]) -> list[dict[str, Any]]:
+    return [_unit_entry(f"u{i}", [qubit]) for i, qubit in enumerate(qubit_names)]
+
+
+def _window_units(
+    qubit_names: list[str],
+    active_qubits: list[str],
+    *,
+    name: str,
+) -> list[dict[str, Any]]:
+    active_set = set(active_qubits)
+    units: list[dict[str, Any]] = []
+    if active_qubits:
+        units.append(_unit_entry(name, list(active_qubits)))
+    for index, qubit in enumerate(qubit_names):
+        if qubit not in active_set:
+            units.append(_unit_entry(f"u{index}", [qubit]))
+    return units
+
+
 def _bv_hidden_string(n: int) -> str:
     input_qubits = n - 1
     weight = max(3, round(input_qubits / 4))
@@ -140,6 +191,66 @@ def _sliding_window_units(qubit_names: list[str], start_index: int, window_size:
         if qubit not in active:
             units.append(_unit_entry(f"u{index}", [qubit]))
     return units
+
+
+def _adder_register_bitstrings(register_bits: int) -> tuple[str, str]:
+    a_bits = "".join("1" if index % 2 == 0 else "0" for index in range(register_bits))
+    b_bits = "".join("1" if index % 4 in {0, 1} else "0" for index in range(register_bits))
+    return a_bits, b_bits
+
+
+def _adder_output_bitstring(a_bits: str, b_bits: str) -> str:
+    total = _bits_to_int_lsb_first(a_bits) + _bits_to_int_lsb_first(b_bits)
+    register_bits = len(a_bits)
+    b_sum_bits = _int_to_bits_lsb_first(total % (1 << register_bits), register_bits)
+    cout_bit = "1" if (total >> register_bits) & 1 else "0"
+    return "0" + a_bits + b_sum_bits + cout_bit
+
+
+def _maj_gates(a_qubit: str, b_qubit: str, carry_qubit: str, stage: int) -> list[dict[str, Any]]:
+    return [
+        {
+            "name": "CX",
+            "controls": [a_qubit],
+            "targets": [b_qubit],
+            "label": f"maj-cx-ab-{stage}",
+        },
+        {
+            "name": "CX",
+            "controls": [a_qubit],
+            "targets": [carry_qubit],
+            "label": f"maj-cx-ac-{stage}",
+        },
+        {
+            "name": "CCX",
+            "controls": [carry_qubit, b_qubit],
+            "targets": [a_qubit],
+            "label": f"maj-ccx-cba-{stage}",
+        },
+    ]
+
+
+def _uma_gates(a_qubit: str, b_qubit: str, carry_qubit: str, stage: int) -> list[dict[str, Any]]:
+    return [
+        {
+            "name": "CCX",
+            "controls": [carry_qubit, b_qubit],
+            "targets": [a_qubit],
+            "label": f"uma-ccx-cba-{stage}",
+        },
+        {
+            "name": "CX",
+            "controls": [a_qubit],
+            "targets": [carry_qubit],
+            "label": f"uma-cx-ac-{stage}",
+        },
+        {
+            "name": "CX",
+            "controls": [carry_qubit],
+            "targets": [b_qubit],
+            "label": f"uma-cx-cb-{stage}",
+        },
+    ]
 
 
 def build_aiqft_payload(n: int, window_size: int) -> dict[str, Any]:
@@ -237,8 +348,128 @@ def build_aiqft_payload(n: int, window_size: int) -> dict[str, Any]:
     }
 
 
+def build_adder_payload(n: int) -> dict[str, Any]:
+    if n < 6 or n % 2 != 0:
+        raise ValueError("Adder models require an even qubit count of at least 6")
+
+    register_bits = (n - 2) // 2
+    qubits = [f"q{i}" for i in range(n)]
+    cin = qubits[0]
+    a_qubits = qubits[1 : 1 + register_bits]
+    b_qubits = qubits[1 + register_bits : 1 + 2 * register_bits]
+    cout = qubits[-1]
+    a_bits, b_bits = _adder_register_bitstrings(register_bits)
+    expected_output = _adder_output_bitstring(a_bits, b_bits)
+
+    gates: list[dict[str, Any]] = []
+    states: list[dict[str, Any]] = [{"name": "s0", "units": _singleton_units(qubits)}]
+
+    def append_gate(gate: dict[str, Any], next_units: list[dict[str, Any]]) -> None:
+        gate_index = len(gates)
+        states[-1]["transition"] = {"gate_index": gate_index, "next_state": f"s{gate_index + 1}"}
+        gates.append(gate)
+        states.append({"name": f"s{gate_index + 1}", "units": next_units})
+
+    for index, bit in enumerate(a_bits):
+        if bit == "1":
+            append_gate(
+                {
+                    "name": "X",
+                    "targets": [a_qubits[index]],
+                    "label": f"init-a-{index}",
+                },
+                _singleton_units(qubits),
+            )
+    for index, bit in enumerate(b_bits):
+        if bit == "1":
+            append_gate(
+                {
+                    "name": "X",
+                    "targets": [b_qubits[index]],
+                    "label": f"init-b-{index}",
+                },
+                _singleton_units(qubits),
+            )
+
+    for index in range(register_bits):
+        carry_qubit = cin if index == 0 else a_qubits[index - 1]
+        pair_units = _window_units(
+            qubits,
+            [a_qubits[index], b_qubits[index]],
+            name=f"pair_{index}",
+        )
+        triple_units = _window_units(
+            qubits,
+            [carry_qubit, a_qubits[index], b_qubits[index]],
+            name=f"carry_{index}",
+        )
+        maj_gates = _maj_gates(a_qubits[index], b_qubits[index], carry_qubit, index)
+        append_gate(maj_gates[0], pair_units)
+        append_gate(maj_gates[1], triple_units)
+        append_gate(maj_gates[2], _singleton_units(qubits))
+
+    append_gate(
+        {
+            "name": "CX",
+            "controls": [a_qubits[-1]],
+            "targets": [cout],
+            "label": "write-cout",
+        },
+        _singleton_units(qubits),
+    )
+
+    for index in range(register_bits - 1, -1, -1):
+        carry_qubit = cin if index == 0 else a_qubits[index - 1]
+        triple_units = _window_units(
+            qubits,
+            [carry_qubit, a_qubits[index], b_qubits[index]],
+            name=f"carry_{index}",
+        )
+        uma_gates = _uma_gates(a_qubits[index], b_qubits[index], carry_qubit, index)
+        append_gate(uma_gates[0], triple_units)
+        append_gate(uma_gates[1], triple_units)
+        append_gate(uma_gates[2], _singleton_units(qubits))
+
+    return {
+        "format": "qmodel-v1",
+        "program_name": f"adder_{n}",
+        "metadata": {
+            "family": "adder",
+            "n": n,
+            "register_bits": register_bits,
+            "pattern": "cuccaro_carry_window_schedule",
+            "a_input": a_bits,
+            "b_input": b_bits,
+            "expected_output": expected_output,
+        },
+        "qubits": qubits,
+        "initial_state": "zero",
+        "gates": gates,
+        "measurement": {"qubits": qubits, "basis": "computational"},
+        "organization_schedule": {
+            "initial_state": "s0",
+            "states": states,
+        },
+        "assertion": {
+            "name": "adder_output_probability",
+            "kind": "probability",
+            "target": {
+                "type": "bitwise_measurement_outcome",
+                "scope": qubits,
+                "outcome": expected_output,
+            },
+            "comparator": ">=",
+            "threshold": 0.999999,
+        },
+    }
+
+
 def build_aiqft_family_payloads() -> list[dict[str, Any]]:
     return [build_aiqft_payload(n, window_size) for n, window_size in AIQFT_FAMILY_VARIANTS]
+
+
+def build_adder_family_payloads() -> list[dict[str, Any]]:
+    return [build_adder_payload(n) for n in ADDER_STANDARD_SIZES]
 
 
 def build_bv_payload(n: int) -> dict[str, Any]:
@@ -404,8 +635,17 @@ def build_ghz_family_payloads() -> list[dict[str, Any]]:
 def write_qmodel_payload(payload: dict[str, Any], path: str | Path) -> Path:
     output_path = Path(path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
+    serializable_payload = dict(payload)
+    serializable_payload["qubits"] = _FlowList(payload["qubits"])
     with output_path.open("w", encoding="utf-8") as handle:
-        yaml.safe_dump(payload, handle, sort_keys=False, allow_unicode=False)
+        yaml.dump(
+            serializable_payload,
+            handle,
+            Dumper=_QModelDumper,
+            sort_keys=False,
+            allow_unicode=False,
+            default_flow_style=False,
+        )
     return output_path
 
 
@@ -423,6 +663,16 @@ def emit_bv_family_models(output_dir: str | Path) -> list[Path]:
     target_dir = Path(output_dir)
     written_paths: list[Path] = []
     for payload in build_bv_family_payloads():
+        written_paths.append(
+            write_qmodel_payload(payload, target_dir / f"{payload['program_name']}.qmodel")
+        )
+    return written_paths
+
+
+def emit_adder_family_models(output_dir: str | Path) -> list[Path]:
+    target_dir = Path(output_dir)
+    written_paths: list[Path] = []
+    for payload in build_adder_family_payloads():
         written_paths.append(
             write_qmodel_payload(payload, target_dir / f"{payload['program_name']}.qmodel")
         )

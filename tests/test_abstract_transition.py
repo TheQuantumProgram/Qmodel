@@ -176,6 +176,59 @@ class AbstractTransitionTests(unittest.TestCase):
             ["w_2_5", "w_3_6", "w_4_7", "w_5_8"],
         )
 
+    def test_select_reconstruction_support_units_prefers_connected_overlap_for_ghz_chain(self) -> None:
+        units = (
+            abstract_local_state(
+                DensityMatrix(np.diag([0.5, 0.0, 0.0, 0.5]).astype(complex)),
+                ["q0", "q1"],
+                name="u01",
+                certificate_ids=("cert_prefix",),
+            ),
+            abstract_local_state(
+                DensityMatrix(np.diag([0.5, 0.0, 0.0, 0.5]).astype(complex)),
+                ["q1", "q2"],
+                name="u12",
+                certificate_ids=("cert_prefix",),
+            ),
+            abstract_local_state(
+                DensityMatrix(np.diag([0.5, 0.0, 0.0, 0.5]).astype(complex)),
+                ["q2", "q3"],
+                name="u23",
+                certificate_ids=("cert_prefix",),
+            ),
+            abstract_local_state(DensityMatrix.from_label("0"), ["q4"], name="u4"),
+        )
+
+        selected = select_reconstruction_support_units(
+            all_units=units,
+            seed_units=(units[2], units[3]),
+            workspace_qubits=["q1", "q2", "q3", "q4"],
+            global_qubits=["q0", "q1", "q2", "q3", "q4"],
+        )
+
+        self.assertEqual([unit.name for unit in selected], ["u23", "u4", "u12"])
+
+    def test_reconstruct_scope_state_preserves_diagonal_overlap_correlation(self) -> None:
+        pair_rho = DensityMatrix(np.diag([0.5, 0.0, 0.0, 0.5]).astype(complex))
+        state = AbstractState(
+            units=(
+                abstract_local_state(pair_rho, ["q0", "q1"], name="u01"),
+                abstract_local_state(pair_rho, ["q1", "q2"], name="u12"),
+            ),
+            position=0,
+        )
+
+        reconstructed = reconstruct_scope_state(
+            state,
+            ["q0", "q1", "q2"],
+            ["q0", "q1", "q2"],
+        )
+
+        np.testing.assert_allclose(
+            reconstructed.data,
+            np.diag([0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5]).astype(complex),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

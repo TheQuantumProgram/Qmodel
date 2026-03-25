@@ -3,70 +3,86 @@ program_name: organization_schedule_chain
 metadata:
   family: organization_schedule
   n: 3
-
 qubits: [q0, q1, q2]
 initial_state: zero
-
 gates:
-  - name: H
-    targets: [q0]
-    label: prepare-q0
-  - name: CX
-    controls: [q0]
-    targets: [q1]
-    label: couple-q0-q1
-  - name: CX
-    controls: [q1]
-    targets: [q2]
-    label: couple-q1-q2
-
+- name: H
+  targets:
+  - q0
+  label: prepare-q0
+- name: CX
+  controls:
+  - q0
+  targets:
+  - q1
+  label: couple-q0-q1
+- name: CX
+  controls:
+  - q1
+  targets:
+  - q2
+  label: couple-q1-q2
 organization_schedule:
   initial_state: s0
   states:
-    - name: s0
-      units:
-        - name: uq0
-          qubits: [q0]
-        - name: uq1
-          qubits: [q1]
-        - name: uq2
-          qubits: [q2]
-      transition:
-        gate_index: 0
-        next_state: s1
-    - name: s1
-      units:
-        - name: uq0
-          qubits: [q0]
-        - name: uq1
-          qubits: [q1]
-        - name: uq2
-          qubits: [q2]
-      transition:
-        gate_index: 1
-        next_state: s2
-    - name: s2
-      units:
-        - name: uq01
-          qubits: [q0, q1]
-        - name: uq2
-          qubits: [q2]
-      transition:
-        gate_index: 2
-        next_state: s3
-    - name: s3
-      units:
-        - name: uq01
-          qubits: [q0, q1]
-        - name: uq12
-          qubits: [q1, q2]
-
+  - name: s0
+    units:
+    - name: uq0
+      qubits:
+      - q0
+    - name: uq1
+      qubits:
+      - q1
+    - name: uq2
+      qubits:
+      - q2
+    transition:
+      gate_index: 0
+      next_state: s1
+  - name: s1
+    units:
+    - name: uq0
+      qubits:
+      - q0
+    - name: uq1
+      qubits:
+      - q1
+    - name: uq2
+      qubits:
+      - q2
+    transition:
+      gate_index: 1
+      next_state: s2
+  - name: s2
+    units:
+    - name: uq01
+      qubits:
+      - q0
+      - q1
+    - name: uq2
+      qubits:
+      - q2
+    transition:
+      gate_index: 2
+      next_state: s3
+  - name: s3
+    units:
+    - name: uq01
+      qubits:
+      - q0
+      - q1
+    - name: uq12
+      qubits:
+      - q1
+      - q2
 assertion:
   name: q2_one_probability
   kind: probability
   target:
     type: measurement_outcome
-    scope: [q2]
-    outcomes: ["1"]
-  comparator: ">="
+    scope:
+    - q2
+    outcomes:
+    - '1'
+  comparator: '>='
   threshold: 0.0

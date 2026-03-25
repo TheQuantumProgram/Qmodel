@@ -6,17 +6,7 @@ metadata:
   window_size: 5
   phase_radius: 4
   target_string: '1000100001'
-qubits: &id001
-- q0
-- q1
-- q2
-- q3
-- q4
-- q5
-- q6
-- q7
-- q8
-- q9
+qubits: [q0, q1, q2, q3, q4, q5, q6, q7, q8, q9]
 initial_state: zero
 gates:
 - name: H
@@ -400,7 +390,17 @@ gates:
   - q0
   label: iqft-h-0
 measurement:
-  qubits: *id001
+  qubits:
+  - q0
+  - q1
+  - q2
+  - q3
+  - q4
+  - q5
+  - q6
+  - q7
+  - q8
+  - q9
   basis: computational
 organization_schedule:
   initial_state: s0
@@ -1176,7 +1176,7 @@ organization_schedule:
       gate_index: 21
       next_state: s22
   - name: s22
-    units: &id002
+    units:
     - name: w_8_9
       qubits:
       - q8
@@ -1209,12 +1209,40 @@ organization_schedule:
       gate_index: 22
       next_state: s23
   - name: s23
-    units: *id002
+    units:
+    - name: w_8_9
+      qubits:
+      - q8
+      - q9
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
     transition:
       gate_index: 23
       next_state: s24
   - name: s24
-    units: &id003
+    units:
     - name: w_7_9
       qubits:
       - q7
@@ -1245,17 +1273,69 @@ organization_schedule:
       gate_index: 24
       next_state: s25
   - name: s25
-    units: *id003
+    units:
+    - name: w_7_9
+      qubits:
+      - q7
+      - q8
+      - q9
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    - name: u6
+      qubits:
+      - q6
     transition:
       gate_index: 25
       next_state: s26
   - name: s26
-    units: *id003
+    units:
+    - name: w_7_9
+      qubits:
+      - q7
+      - q8
+      - q9
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    - name: u6
+      qubits:
+      - q6
     transition:
       gate_index: 26
       next_state: s27
   - name: s27
-    units: &id004
+    units:
     - name: w_6_9
       qubits:
       - q6
@@ -1284,22 +1364,94 @@ organization_schedule:
       gate_index: 27
       next_state: s28
   - name: s28
-    units: *id004
+    units:
+    - name: w_6_9
+      qubits:
+      - q6
+      - q7
+      - q8
+      - q9
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
     transition:
       gate_index: 28
       next_state: s29
   - name: s29
-    units: *id004
+    units:
+    - name: w_6_9
+      qubits:
+      - q6
+      - q7
+      - q8
+      - q9
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
     transition:
       gate_index: 29
       next_state: s30
   - name: s30
-    units: *id004
+    units:
+    - name: w_6_9
+      qubits:
+      - q6
+      - q7
+      - q8
+      - q9
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
+    - name: u5
+      qubits:
+      - q5
     transition:
       gate_index: 30
       next_state: s31
   - name: s31
-    units: &id005
+    units:
     - name: w_5_9
       qubits:
       - q5
@@ -1326,27 +1478,115 @@ organization_schedule:
       gate_index: 31
       next_state: s32
   - name: s32
-    units: *id005
+    units:
+    - name: w_5_9
+      qubits:
+      - q5
+      - q6
+      - q7
+      - q8
+      - q9
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
     transition:
       gate_index: 32
       next_state: s33
   - name: s33
-    units: *id005
+    units:
+    - name: w_5_9
+      qubits:
+      - q5
+      - q6
+      - q7
+      - q8
+      - q9
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
     transition:
       gate_index: 33
       next_state: s34
   - name: s34
-    units: *id005
+    units:
+    - name: w_5_9
+      qubits:
+      - q5
+      - q6
+      - q7
+      - q8
+      - q9
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
     transition:
       gate_index: 34
       next_state: s35
   - name: s35
-    units: *id005
+    units:
+    - name: w_5_9
+      qubits:
+      - q5
+      - q6
+      - q7
+      - q8
+      - q9
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u4
+      qubits:
+      - q4
     transition:
       gate_index: 35
       next_state: s36
   - name: s36
-    units: &id006
+    units:
     - name: w_4_8
       qubits:
       - q4
@@ -1373,27 +1613,115 @@ organization_schedule:
       gate_index: 36
       next_state: s37
   - name: s37
-    units: *id006
+    units:
+    - name: w_4_8
+      qubits:
+      - q4
+      - q5
+      - q6
+      - q7
+      - q8
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u9
+      qubits:
+      - q9
     transition:
       gate_index: 37
       next_state: s38
   - name: s38
-    units: *id006
+    units:
+    - name: w_4_8
+      qubits:
+      - q4
+      - q5
+      - q6
+      - q7
+      - q8
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u9
+      qubits:
+      - q9
     transition:
       gate_index: 38
       next_state: s39
   - name: s39
-    units: *id006
+    units:
+    - name: w_4_8
+      qubits:
+      - q4
+      - q5
+      - q6
+      - q7
+      - q8
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u9
+      qubits:
+      - q9
     transition:
       gate_index: 39
       next_state: s40
   - name: s40
-    units: *id006
+    units:
+    - name: w_4_8
+      qubits:
+      - q4
+      - q5
+      - q6
+      - q7
+      - q8
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u3
+      qubits:
+      - q3
+    - name: u9
+      qubits:
+      - q9
     transition:
       gate_index: 40
       next_state: s41
   - name: s41
-    units: &id007
+    units:
     - name: w_3_7
       qubits:
       - q3
@@ -1420,27 +1748,115 @@ organization_schedule:
       gate_index: 41
       next_state: s42
   - name: s42
-    units: *id007
+    units:
+    - name: w_3_7
+      qubits:
+      - q3
+      - q4
+      - q5
+      - q6
+      - q7
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
     transition:
       gate_index: 42
       next_state: s43
   - name: s43
-    units: *id007
+    units:
+    - name: w_3_7
+      qubits:
+      - q3
+      - q4
+      - q5
+      - q6
+      - q7
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
     transition:
       gate_index: 43
       next_state: s44
   - name: s44
-    units: *id007
+    units:
+    - name: w_3_7
+      qubits:
+      - q3
+      - q4
+      - q5
+      - q6
+      - q7
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
     transition:
       gate_index: 44
       next_state: s45
   - name: s45
-    units: *id007
+    units:
+    - name: w_3_7
+      qubits:
+      - q3
+      - q4
+      - q5
+      - q6
+      - q7
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u2
+      qubits:
+      - q2
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
     transition:
       gate_index: 45
       next_state: s46
   - name: s46
-    units: &id008
+    units:
     - name: w_2_6
       qubits:
       - q2
@@ -1467,27 +1883,115 @@ organization_schedule:
       gate_index: 46
       next_state: s47
   - name: s47
-    units: *id008
+    units:
+    - name: w_2_6
+      qubits:
+      - q2
+      - q3
+      - q4
+      - q5
+      - q6
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
     transition:
       gate_index: 47
       next_state: s48
   - name: s48
-    units: *id008
+    units:
+    - name: w_2_6
+      qubits:
+      - q2
+      - q3
+      - q4
+      - q5
+      - q6
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
     transition:
       gate_index: 48
       next_state: s49
   - name: s49
-    units: *id008
+    units:
+    - name: w_2_6
+      qubits:
+      - q2
+      - q3
+      - q4
+      - q5
+      - q6
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
     transition:
       gate_index: 49
       next_state: s50
   - name: s50
-    units: *id008
+    units:
+    - name: w_2_6
+      qubits:
+      - q2
+      - q3
+      - q4
+      - q5
+      - q6
+    - name: u0
+      qubits:
+      - q0
+    - name: u1
+      qubits:
+      - q1
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
     transition:
       gate_index: 50
       next_state: s51
   - name: s51
-    units: &id009
+    units:
     - name: w_1_5
       qubits:
       - q1
@@ -1514,27 +2018,115 @@ organization_schedule:
       gate_index: 51
       next_state: s52
   - name: s52
-    units: *id009
+    units:
+    - name: w_1_5
+      qubits:
+      - q1
+      - q2
+      - q3
+      - q4
+      - q5
+    - name: u0
+      qubits:
+      - q0
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
     transition:
       gate_index: 52
       next_state: s53
   - name: s53
-    units: *id009
+    units:
+    - name: w_1_5
+      qubits:
+      - q1
+      - q2
+      - q3
+      - q4
+      - q5
+    - name: u0
+      qubits:
+      - q0
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
     transition:
       gate_index: 53
       next_state: s54
   - name: s54
-    units: *id009
+    units:
+    - name: w_1_5
+      qubits:
+      - q1
+      - q2
+      - q3
+      - q4
+      - q5
+    - name: u0
+      qubits:
+      - q0
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
     transition:
       gate_index: 54
       next_state: s55
   - name: s55
-    units: *id009
+    units:
+    - name: w_1_5
+      qubits:
+      - q1
+      - q2
+      - q3
+      - q4
+      - q5
+    - name: u0
+      qubits:
+      - q0
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
     transition:
       gate_index: 55
       next_state: s56
   - name: s56
-    units: &id010
+    units:
     - name: w_0_4
       qubits:
       - q0
@@ -1561,28 +2153,126 @@ organization_schedule:
       gate_index: 56
       next_state: s57
   - name: s57
-    units: *id010
+    units:
+    - name: w_0_4
+      qubits:
+      - q0
+      - q1
+      - q2
+      - q3
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
     transition:
       gate_index: 57
       next_state: s58
   - name: s58
-    units: *id010
+    units:
+    - name: w_0_4
+      qubits:
+      - q0
+      - q1
+      - q2
+      - q3
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
     transition:
       gate_index: 58
       next_state: s59
   - name: s59
-    units: *id010
+    units:
+    - name: w_0_4
+      qubits:
+      - q0
+      - q1
+      - q2
+      - q3
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
     transition:
       gate_index: 59
       next_state: s60
   - name: s60
-    units: *id010
+    units:
+    - name: w_0_4
+      qubits:
+      - q0
+      - q1
+      - q2
+      - q3
+      - q4
+    - name: u5
+      qubits:
+      - q5
+    - name: u6
+      qubits:
+      - q6
+    - name: u7
+      qubits:
+      - q7
+    - name: u8
+      qubits:
+      - q8
+    - name: u9
+      qubits:
+      - q9
 assertion:
   name: recover_target_bits
   kind: probability
   target:
     type: bitwise_measurement_outcome
-    scope: *id001
+    scope:
+    - q0
+    - q1
+    - q2
+    - q3
+    - q4
+    - q5
+    - q6
+    - q7
+    - q8
+    - q9
     outcome: '1000100001'
   comparator: '>='
   threshold: 0.997

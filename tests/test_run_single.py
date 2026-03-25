@@ -66,6 +66,22 @@ class RunSingleScriptTests(unittest.TestCase):
             result["comparison"]["full_execution"]["time_benchmark"]["mode"],
             "measured",
         )
+        self.assertGreater(
+            result["comparison"]["full_execution"]["time_benchmark"]["statevector_elapsed_seconds"],
+            0.0,
+        )
+        self.assertGreater(
+            result["comparison"]["full_execution"]["time_benchmark"]["concrete_backend_elapsed_seconds"],
+            0.0,
+        )
+        self.assertGreaterEqual(
+            result["comparison"]["full_execution"]["time_benchmark"]["assertion_evaluation_seconds"],
+            0.0,
+        )
+        self.assertGreaterEqual(
+            result["comparison"]["full_execution"]["time_benchmark"]["concrete_backend_elapsed_seconds"],
+            result["comparison"]["full_execution"]["time_benchmark"]["statevector_elapsed_seconds"],
+        )
         self.assertAlmostEqual(
             result["abstract"]["max_execution_mib"],
             256 / (1024 * 1024),

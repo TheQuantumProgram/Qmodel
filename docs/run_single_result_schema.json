@@ -215,6 +215,14 @@
                   "type": "number",
                   "minimum": 0
                 },
+                "concrete_backend_elapsed_seconds": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "assertion_evaluation_seconds": {
+                  "type": ["number", "null"],
+                  "minimum": 0
+                },
                 "reason": {
                   "type": "string"
                 }

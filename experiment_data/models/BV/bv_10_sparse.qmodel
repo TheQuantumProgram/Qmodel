@@ -6,17 +6,7 @@ metadata:
   pattern: sparse_oracle
   hidden_string: '100010001'
   hidden_weight: 3
-qubits:
-- q0
-- q1
-- q2
-- q3
-- q4
-- q5
-- q6
-- q7
-- q8
-- q9
+qubits: [q0, q1, q2, q3, q4, q5, q6, q7, q8, q9]
 initial_state: zero
 gates:
 - name: X
