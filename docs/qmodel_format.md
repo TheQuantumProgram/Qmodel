@@ -9,7 +9,7 @@ Formal experiment models are organized by algorithm family under:
 - `project_code/experiment_data/models/GHZ/`
 - `project_code/experiment_data/models/BV/`
 - `project_code/experiment_data/models/Grover/`
-- `project_code/experiment_data/models/AIQFT/`
+- `project_code/experiment_data/models/IQFT/`
 - `project_code/experiment_data/models/Adder/`
 - `project_code/experiment_data/models/Custom/`
 

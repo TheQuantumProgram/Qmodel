@@ -56,7 +56,8 @@ Current formal experiment-model families:
 - `experiment_data/models/GHZ/`: GHZ-state preparation and related staircase-entanglement instances
 - `experiment_data/models/BV/`: Bernstein-Vazirani instances with structured oracle layouts
 - `experiment_data/models/Grover/`: Grover-search instances and oracle/diffusion variants
-- `experiment_data/models/AIQFT/`: approximate inverse-QFT recovery families with sliding-window phase interactions
+- `experiment_data/models/IQFT/`: approximate inverse-QFT recovery families with sliding-window phase interactions
+- `experiment_data/models/IQFTCompare/`: small-scale IQFT comparison instances used to compare abstract model checking against full execution on `n = 10..20`
 - `experiment_data/models/Adder/`: ripple-carry adders and related arithmetic-circuit families
 - `experiment_data/models/Custom/`: original circuit suites for overlap-heavy and structured-control stress tests
 
@@ -67,8 +68,9 @@ Current GHZ formal models:
 Current BV formal models:
 - sparse-oracle BV: `n = 10, 20, 50, 100, 150, 200`
 
-Current AIQFT formal models:
-- sliding-window AIQFT recovery: `n = 10, 20, 50, 100, 150, 200`, all with window size `5`
+Current IQFT formal models:
+- sliding-window IQFT recovery: `n = 10, 20, 50, 100, 150, 200`, all with window size `5`
+- small comparison suite for abstract/full-execution cost ratios: `n = 5, 6, ..., 20`, all with window size `5`
 
 Current Adder formal models:
 - ripple-carry adders with dynamic carry-window schedules: `n = 10, 20, 50, 100, 150, 200`
