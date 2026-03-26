@@ -13,9 +13,12 @@ This directory stores formal `.qmodel` instances used for actual experiments. Sm
 - `Grover/`
   - Grover-search circuits, including oracle and diffusion structures
   - useful for repeated controlled operations and growing interaction ranges
-- `AIQFT/`
+- `IQFT/`
   - approximate inverse-QFT recovery families
   - useful for structured phase-recovery circuits under bounded sliding-window organizations
+- `IQFTCompare/`
+  - small-scale approximate inverse-QFT recovery family for `n = 10..20`
+  - intended specifically for abstract vs. full-execution time/space comparison
 - `Adder/`
   - ripple-carry adders and related arithmetic subcircuits
   - useful for structured `CX`/`CCX`-heavy local interactions
@@ -44,13 +47,18 @@ This directory stores formal `.qmodel` instances used for actual experiments. Sm
 - `BV/bv_150_sparse.qmodel`
 - `BV/bv_200_sparse.qmodel`
   - sparse-oracle Bernstein-Vazirani family at the six planned qubit scales
-- `AIQFT/aiqft_10_w5.qmodel`
-- `AIQFT/aiqft_20_w5.qmodel`
-- `AIQFT/aiqft_50_w5.qmodel`
-- `AIQFT/aiqft_100_w5.qmodel`
-- `AIQFT/aiqft_150_w5.qmodel`
-- `AIQFT/aiqft_200_w5.qmodel`
+- `IQFT/iqft_10_w5.qmodel`
+- `IQFT/iqft_20_w5.qmodel`
+- `IQFT/iqft_50_w5.qmodel`
+- `IQFT/iqft_100_w5.qmodel`
+- `IQFT/iqft_150_w5.qmodel`
+- `IQFT/iqft_200_w5.qmodel`
   - sliding-window approximate inverse-QFT recovery family with window size `5`
+- `IQFTCompare/iqft_compare_10_w5.qmodel`
+- `IQFTCompare/iqft_compare_11_w5.qmodel`
+- `...`
+- `IQFTCompare/iqft_compare_20_w5.qmodel`
+  - small-scale comparison family covering every `n = 10..20` with window size `5`
 - `Adder/adder_10.qmodel`
 - `Adder/adder_20.qmodel`
 - `Adder/adder_50.qmodel`

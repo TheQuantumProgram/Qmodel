@@ -6,11 +6,14 @@ from pathlib import Path
 
 from qmodel.benchmarks.generators import (
     ADDER_STANDARD_SIZES,
+    IQFT_SMALL_COMPARE_VARIANTS,
     CUSTOM_MODEL_NAMES,
     build_adder_payload,
     build_adder_family_payloads,
-    build_aiqft_family_payloads,
-    build_aiqft_payload,
+    build_iqft_compare_payload,
+    build_iqft_family_payloads,
+    build_iqft_small_compare_payloads,
+    build_iqft_payload,
     build_bv_family_payloads,
     build_bv_payload,
     build_custom_family_payloads,
@@ -18,7 +21,8 @@ from qmodel.benchmarks.generators import (
     build_ghz_family_payloads,
     build_ghz_staircase_payload,
     emit_adder_family_models,
-    emit_aiqft_family_models,
+    emit_iqft_family_models,
+    emit_iqft_small_compare_models,
     emit_bv_family_models,
     emit_custom_family_models,
     write_qmodel_payload,
@@ -225,12 +229,12 @@ class BVGeneratorTests(unittest.TestCase):
             self.assertEqual(len(spec.assertions), 1)
 
 
-class AIQFTGeneratorTests(unittest.TestCase):
-    def test_build_aiqft_payload_for_n10_window5(self) -> None:
-        payload = build_aiqft_payload(10, 5)
+class IQFTGeneratorTests(unittest.TestCase):
+    def test_build_iqft_payload_for_n10_window5(self) -> None:
+        payload = build_iqft_payload(10, 5)
 
-        self.assertEqual(payload["program_name"], "aiqft_10_w5")
-        self.assertEqual(payload["metadata"]["family"], "aiqft")
+        self.assertEqual(payload["program_name"], "iqft_10_w5")
+        self.assertEqual(payload["metadata"]["family"], "iqft")
         self.assertEqual(payload["metadata"]["n"], 10)
         self.assertEqual(payload["metadata"]["window_size"], 5)
         self.assertEqual(payload["assertion"]["target"]["type"], "bitwise_measurement_outcome")
@@ -245,67 +249,115 @@ class AIQFTGeneratorTests(unittest.TestCase):
         self.assertEqual(payload["gates"][0]["name"], "H")
         self.assertIn(payload["gates"][-1]["name"], {"H", "CP"})
 
-    def test_build_aiqft_family_payloads_covers_10_20_50_100_150_200(self) -> None:
-        payloads = build_aiqft_family_payloads()
+    def test_build_iqft_family_payloads_covers_10_20_50_100_150_200(self) -> None:
+        payloads = build_iqft_family_payloads()
         names = [payload["program_name"] for payload in payloads]
 
         self.assertEqual(
             names,
             [
-                "aiqft_10_w5",
-                "aiqft_20_w5",
-                "aiqft_50_w5",
-                "aiqft_100_w5",
-                "aiqft_150_w5",
-                "aiqft_200_w5",
+                "iqft_10_w5",
+                "iqft_20_w5",
+                "iqft_50_w5",
+                "iqft_100_w5",
+                "iqft_150_w5",
+                "iqft_200_w5",
             ],
         )
 
-    def test_write_generated_aiqft_payload_round_trips_through_parser(self) -> None:
-        payload = build_aiqft_payload(20, 5)
+    def test_build_iqft_compare_payload_for_n10_window5(self) -> None:
+        payload = build_iqft_compare_payload(10, 5)
+
+        self.assertEqual(payload["program_name"], "iqft_compare_10_w5")
+        self.assertEqual(payload["metadata"]["family"], "iqft")
+        self.assertEqual(payload["metadata"]["experiment_group"], "small_full_execution_compare")
+        self.assertEqual(payload["metadata"]["compare_range"], "10_to_20")
+        self.assertEqual(payload["assertion"]["threshold"], 0.996)
+        self.assertEqual(len(payload["qubits"]), 10)
+        self.assertEqual(len(payload["assertion"]["target"]["scope"]), 10)
+
+    def test_build_iqft_small_compare_payloads_covers_10_to_20(self) -> None:
+        payloads = build_iqft_small_compare_payloads()
+        names = [payload["program_name"] for payload in payloads]
+
+        self.assertEqual(
+            names,
+            [f"iqft_compare_{n}_w5" for n, _window_size in IQFT_SMALL_COMPARE_VARIANTS],
+        )
+
+    def test_write_generated_iqft_payload_round_trips_through_parser(self) -> None:
+        payload = build_iqft_payload(20, 5)
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            path = Path(tmpdir) / "aiqft_generated.qmodel"
+            path = Path(tmpdir) / "iqft_generated.qmodel"
             write_qmodel_payload(payload, path)
             spec = parse_qmodel_file(str(path))
 
-        self.assertEqual(spec.program_name, "aiqft_20_w5")
-        self.assertEqual(spec.metadata["family"], "aiqft")
+        self.assertEqual(spec.program_name, "iqft_20_w5")
+        self.assertEqual(spec.metadata["family"], "iqft")
         self.assertEqual(spec.metadata["window_size"], 5)
         self.assertEqual(spec.assertions[0].threshold, 0.997)
         self.assertEqual(spec.assertions[0].target["type"], "bitwise_measurement_outcome")
         self.assertEqual(len(spec.organization_schedule.states), len(payload["gates"]) + 1)
 
-    def test_emit_aiqft_family_models_writes_six_files_in_tempdir(self) -> None:
+    def test_emit_iqft_family_models_writes_six_files_in_tempdir(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:
-            written_paths = emit_aiqft_family_models(tmpdir)
+            written_paths = emit_iqft_family_models(tmpdir)
             self.assertEqual(len(written_paths), 6)
             self.assertEqual(
                 [path.name for path in written_paths],
                 [
-                    "aiqft_10_w5.qmodel",
-                    "aiqft_20_w5.qmodel",
-                    "aiqft_50_w5.qmodel",
-                    "aiqft_100_w5.qmodel",
-                    "aiqft_150_w5.qmodel",
-                    "aiqft_200_w5.qmodel",
+                    "iqft_10_w5.qmodel",
+                    "iqft_20_w5.qmodel",
+                    "iqft_50_w5.qmodel",
+                    "iqft_100_w5.qmodel",
+                    "iqft_150_w5.qmodel",
+                    "iqft_200_w5.qmodel",
                 ],
             )
             for path in written_paths:
                 self.assertTrue(path.exists(), path)
                 spec = parse_qmodel_file(str(path))
-                self.assertTrue(spec.program_name.startswith("aiqft_"))
+                self.assertTrue(spec.program_name.startswith("iqft_"))
 
-    def test_formal_aiqft_models_parse(self) -> None:
+    def test_emit_iqft_small_compare_models_writes_eleven_files_in_tempdir(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            written_paths = emit_iqft_small_compare_models(tmpdir)
+            self.assertEqual(len(written_paths), 11)
+            self.assertEqual(
+                [path.name for path in written_paths],
+                [f"iqft_compare_{n}_w5.qmodel" for n in range(10, 21)],
+            )
+            for path in written_paths:
+                self.assertTrue(path.exists(), path)
+                spec = parse_qmodel_file(str(path))
+                self.assertTrue(spec.program_name.startswith("iqft_compare_"))
+                self.assertEqual(spec.metadata["family"], "iqft")
+                self.assertEqual(spec.metadata["experiment_group"], "small_full_execution_compare")
+
+    def test_formal_iqft_models_parse(self) -> None:
         base = Path(
-            "/home/li/project/QCE-2026/project_code/experiment_data/models/AIQFT"
+            "/home/li/project/QCE-2026/project_code/experiment_data/models/IQFT"
         )
         paths = sorted(path for path in base.glob("*.qmodel") if path.name != ".gitkeep")
         self.assertEqual(len(paths), 6)
         for path in paths:
             spec = parse_qmodel_file(str(path))
-            self.assertTrue(spec.program_name.startswith("aiqft_"))
-            self.assertEqual(spec.metadata["family"], "aiqft")
+            self.assertTrue(spec.program_name.startswith("iqft_"))
+            self.assertEqual(spec.metadata["family"], "iqft")
+            self.assertEqual(len(spec.assertions), 1)
+
+    def test_formal_iqft_small_compare_models_parse(self) -> None:
+        base = Path(
+            "/home/li/project/QCE-2026/project_code/experiment_data/models/IQFTCompare"
+        )
+        paths = sorted(path for path in base.glob("*.qmodel") if path.name != ".gitkeep")
+        self.assertEqual(len(paths), 11)
+        for path in paths:
+            spec = parse_qmodel_file(str(path))
+            self.assertTrue(spec.program_name.startswith("iqft_compare_"))
+            self.assertEqual(spec.metadata["family"], "iqft")
+            self.assertEqual(spec.metadata["experiment_group"], "small_full_execution_compare")
             self.assertEqual(len(spec.assertions), 1)
 
 

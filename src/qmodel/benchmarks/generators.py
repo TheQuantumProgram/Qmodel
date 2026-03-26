@@ -15,7 +15,7 @@ GHZ_BIASED_VARIANTS = (
     (50, 0.75),
 )
 BV_STANDARD_SIZES = (10, 20, 50, 100, 150, 200)
-AIQFT_FAMILY_VARIANTS = (
+IQFT_FAMILY_VARIANTS = (
     (10, 5),
     (20, 5),
     (50, 5),
@@ -23,6 +23,7 @@ AIQFT_FAMILY_VARIANTS = (
     (150, 5),
     (200, 5),
 )
+IQFT_SMALL_COMPARE_VARIANTS = tuple((n, 5) for n in range(10, 21))
 ADDER_STANDARD_SIZES = (10, 20, 50, 100, 150, 200)
 CUSTOM_MODEL_NAMES = (
     "custom_overlap_chain_prob_6",
@@ -204,7 +205,7 @@ def _bv_hidden_string(n: int) -> str:
     return "".join(bits)
 
 
-def _aiqft_target_string(n: int) -> str:
+def _iqft_target_string(n: int) -> str:
     weight = max(3, round(n / 6))
     positions = _distributed_positions(n, weight)
     bits = ["0"] * n
@@ -213,11 +214,11 @@ def _aiqft_target_string(n: int) -> str:
     return "".join(bits)
 
 
-def _aiqft_threshold(n: int, window_size: int) -> float:
+def _iqft_threshold(n: int, window_size: int) -> float:
     if window_size == 5:
         return 0.997
     raise ValueError(
-        f"No calibrated AIQFT threshold for n={n}, window_size={window_size}"
+        f"No calibrated IQFT threshold for n={n}, window_size={window_size}"
     )
 
 
@@ -1219,16 +1220,25 @@ def build_custom_disconnected_product_prob_20_payload() -> dict[str, Any]:
     )
 
 
-def build_aiqft_payload(n: int, window_size: int) -> dict[str, Any]:
+def _build_iqft_payload(
+    n: int,
+    window_size: int,
+    *,
+    program_name: str,
+    metadata_extra: dict[str, Any] | None = None,
+    threshold_override: float | None = None,
+) -> dict[str, Any]:
     if n < 2:
-        raise ValueError("AIQFT models require at least 2 qubits")
+        raise ValueError("IQFT models require at least 2 qubits")
     if window_size < 2:
-        raise ValueError("AIQFT window_size must be at least 2")
+        raise ValueError("IQFT window_size must be at least 2")
 
     qubits = [f"q{i}" for i in range(n)]
-    target = _aiqft_target_string(n)
+    target = _iqft_target_string(n)
     radius = window_size - 1
-    threshold = _aiqft_threshold(n, window_size)
+    threshold = (
+        threshold_override if threshold_override is not None else _iqft_threshold(n, window_size)
+    )
 
     gates: list[dict[str, Any]] = []
     states: list[dict[str, Any]] = []
@@ -1282,16 +1292,20 @@ def build_aiqft_payload(n: int, window_size: int) -> dict[str, Any]:
         gates.append({"name": "H", "targets": [qubits[k]], "label": f"iqft-h-{k}"})
         append_transition(decode_units)
 
+    metadata = {
+        "family": "iqft",
+        "n": n,
+        "window_size": window_size,
+        "phase_radius": radius,
+        "target_string": target,
+    }
+    if metadata_extra:
+        metadata.update(metadata_extra)
+
     return {
         "format": "qmodel-v1",
-        "program_name": f"aiqft_{n}_w{window_size}",
-        "metadata": {
-            "family": "aiqft",
-            "n": n,
-            "window_size": window_size,
-            "phase_radius": radius,
-            "target_string": target,
-        },
+        "program_name": program_name,
+        "metadata": metadata,
         "qubits": qubits,
         "initial_state": "zero",
         "gates": gates,
@@ -1312,6 +1326,27 @@ def build_aiqft_payload(n: int, window_size: int) -> dict[str, Any]:
             "threshold": threshold,
         },
     }
+
+
+def build_iqft_payload(n: int, window_size: int) -> dict[str, Any]:
+    return _build_iqft_payload(
+        n,
+        window_size,
+        program_name=f"iqft_{n}_w{window_size}",
+    )
+
+
+def build_iqft_compare_payload(n: int, window_size: int = 5) -> dict[str, Any]:
+    return _build_iqft_payload(
+        n,
+        window_size,
+        program_name=f"iqft_compare_{n}_w{window_size}",
+        metadata_extra={
+            "experiment_group": "small_full_execution_compare",
+            "compare_range": "10_to_20",
+        },
+        threshold_override=0.996,
+    )
 
 
 def build_adder_payload(n: int) -> dict[str, Any]:
@@ -1430,8 +1465,15 @@ def build_adder_payload(n: int) -> dict[str, Any]:
     }
 
 
-def build_aiqft_family_payloads() -> list[dict[str, Any]]:
-    return [build_aiqft_payload(n, window_size) for n, window_size in AIQFT_FAMILY_VARIANTS]
+def build_iqft_family_payloads() -> list[dict[str, Any]]:
+    return [build_iqft_payload(n, window_size) for n, window_size in IQFT_FAMILY_VARIANTS]
+
+
+def build_iqft_small_compare_payloads() -> list[dict[str, Any]]:
+    return [
+        build_iqft_compare_payload(n, window_size)
+        for n, window_size in IQFT_SMALL_COMPARE_VARIANTS
+    ]
 
 
 def build_adder_family_payloads() -> list[dict[str, Any]]:
@@ -1666,10 +1708,20 @@ def emit_adder_family_models(output_dir: str | Path) -> list[Path]:
     return written_paths
 
 
-def emit_aiqft_family_models(output_dir: str | Path) -> list[Path]:
+def emit_iqft_family_models(output_dir: str | Path) -> list[Path]:
     target_dir = Path(output_dir)
     written_paths: list[Path] = []
-    for payload in build_aiqft_family_payloads():
+    for payload in build_iqft_family_payloads():
+        written_paths.append(
+            write_qmodel_payload(payload, target_dir / f"{payload['program_name']}.qmodel")
+        )
+    return written_paths
+
+
+def emit_iqft_small_compare_models(output_dir: str | Path) -> list[Path]:
+    target_dir = Path(output_dir)
+    written_paths: list[Path] = []
+    for payload in build_iqft_small_compare_payloads():
         written_paths.append(
             write_qmodel_payload(payload, target_dir / f"{payload['program_name']}.qmodel")
         )
