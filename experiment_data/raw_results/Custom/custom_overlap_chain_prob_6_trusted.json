@@ -1,0 +1,50 @@
+{
+  "abstract": {
+    "elapsed_seconds": 0.005631683001411147,
+    "judgment": "satisfied",
+    "max_execution_bytes": 65536,
+    "max_execution_mib": 0.0625,
+    "max_state_bytes": 2304,
+    "max_state_mib": 0.002197265625,
+    "max_transition_bytes": 65536,
+    "max_transition_mib": 0.0625,
+    "probability": 0.25,
+    "threshold": 0.25
+  },
+  "assertion_kind": "probability",
+  "assertion_name": "chain_basis_probability",
+  "comparison": {
+    "abstract_ideal_pure_lower_bound": {
+      "max_execution_bytes": 1024,
+      "max_execution_mib": 0.0009765625,
+      "max_state_bytes": 320,
+      "max_state_mib": 0.00030517578125,
+      "max_transition_bytes": 1024,
+      "max_transition_mib": 0.0009765625
+    },
+    "full_execution": {
+      "density_matrix_bytes": 65536,
+      "density_matrix_mib": 0.0625,
+      "qubit_count": 6,
+      "statevector_bytes": 1024,
+      "statevector_mib": 0.0009765625,
+      "time_benchmark": {
+        "assertion_evaluation_seconds": 2.794900501612574e-05,
+        "concrete_backend_elapsed_seconds": 0.0004003270005341619,
+        "cutoff_qubits": 22,
+        "mode": "measured",
+        "statevector_elapsed_seconds": 0.0003723779955180362
+      }
+    }
+  },
+  "concrete": {
+    "judgment": "satisfied",
+    "probability": 0.25,
+    "threshold": 0.25
+  },
+  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/Custom/custom_overlap_chain_prob_6.qmodel",
+  "program_name": "custom_overlap_chain_prob_6",
+  "reconstruction_mode": "trusted",
+  "run_concrete": true,
+  "total_elapsed_seconds": 0.016777231001469772
+}

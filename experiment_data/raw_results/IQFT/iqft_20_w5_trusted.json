@@ -1,0 +1,71 @@
+{
+  "abstract": {
+    "bitwise_probabilities": [
+      0.9984215168901164,
+      0.9983987629635134,
+      0.9983882521102754,
+      0.998347607221503,
+      0.9981852072932523,
+      0.9975198831369368,
+      0.9999281555615301,
+      0.9999303155179742,
+      0.9999276918404048,
+      0.9998991223688974,
+      0.9984656143945142,
+      0.9984556386323048,
+      0.9984156509794951,
+      0.9982544283883942,
+      0.9975923633360942,
+      0.999999999999996,
+      0.9999999999999966,
+      0.999999999999997,
+      0.9999999999999974,
+      0.999999999999998
+    ],
+    "elapsed_seconds": 0.5835581170003934,
+    "judgment": "satisfied",
+    "max_execution_bytes": 66432,
+    "max_execution_mib": 0.0633544921875,
+    "max_state_bytes": 17344,
+    "max_state_mib": 0.01654052734375,
+    "max_transition_bytes": 66432,
+    "max_transition_mib": 0.0633544921875,
+    "probability": 0.9975198831369368,
+    "threshold": 0.997
+  },
+  "assertion_kind": "probability",
+  "assertion_name": "recover_target_bits",
+  "comparison": {
+    "abstract_ideal_pure_lower_bound": {
+      "max_execution_bytes": 1472,
+      "max_execution_mib": 0.00140380859375,
+      "max_state_bytes": 992,
+      "max_state_mib": 0.000946044921875,
+      "max_transition_bytes": 1472,
+      "max_transition_mib": 0.00140380859375
+    },
+    "full_execution": {
+      "density_matrix_bytes": 17592186044416,
+      "density_matrix_mib": 16777216.0,
+      "qubit_count": 20,
+      "statevector_bytes": 16777216,
+      "statevector_mib": 16.0,
+      "time_benchmark": {
+        "assertion_evaluation_seconds": 16.6223951259999,
+        "concrete_backend_elapsed_seconds": 20.919810741999754,
+        "cutoff_qubits": 22,
+        "mode": "measured",
+        "statevector_elapsed_seconds": 4.297415615999853
+      }
+    }
+  },
+  "concrete": {
+    "reason": "Concrete backend disabled by default; pass --run-concrete to enable it.",
+    "status": "skipped"
+  },
+  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/IQFT/iqft_20_w5.qmodel",
+  "program_name": "iqft_20_w5",
+  "reconstruction_mode": "trusted",
+  "run_concrete": false,
+  "total_elapsed_seconds": 23.053938989000017
+}

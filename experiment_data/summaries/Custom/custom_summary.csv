@@ -1,0 +1,17 @@
+program_name,pattern,n,expected_judgment,assertion_kind,abstract_judgment,concrete_judgment,abstract_probability,concrete_probability,abstract_max_overlap,concrete_max_overlap,abstract_first_reached_index,concrete_first_reached_index,abstract_elapsed_seconds,abstract_max_execution_bytes,matches_expectation
+custom_overlap_chain_prob_6,overlap_chain_probability,6,satisfied,probability,satisfied,satisfied,0.25,0.25,,,,,0.005631683001411147,65536,True
+custom_back_edge_prob_6,back_edge_probability,6,satisfied,probability,satisfied,satisfied,0.25,0.25,,,,,0.005667331999575254,65536,True
+custom_split_merge_prob_8,split_merge_probability,8,satisfied,probability,satisfied,satisfied,1.0,1.0,,,,,0.009119733003899455,262208,True
+custom_ccx_ladder_reach_9,ccx_ladder_reachability,9,satisfied,reachability,satisfied,satisfied,,,1.0,1.0,8,8,0.009050862994627096,65728,True
+custom_uncompute_reach_8,uncompute_reachability,8,satisfied,reachability,satisfied,satisfied,,,0.4999999999999999,0.4999999999999999,3,3,0.01003518400102621,1344,True
+custom_disconnected_product_prob_10,disconnected_product_probability,10,satisfied,probability,satisfied,satisfied,0.12499999999999997,0.12499999999999997,,,,,0.006014731996401679,2304,True
+custom_overlap_chain_counter_6,overlap_chain_counterexample,6,violated,probability,violated,violated,0.0,0.0,,,,,0.005127887001435738,16448,True
+custom_split_merge_counter_8,split_merge_counterexample,8,violated,probability,violated,violated,0.0,0.0,,,,,0.005296639006701298,2176,True
+custom_disconnected_product_counter_10,disconnected_product_counterexample,10,violated,probability,violated,violated,0.0,0.0,,,,,0.005660269998770673,1600,True
+custom_ccx_ladder_counter_9,ccx_ladder_counterexample,9,violated,reachability,violated,violated,,,0.0,0.0,,,0.007680538001295645,65728,True
+custom_uncompute_counter_8,uncompute_counterexample,8,violated,reachability,violated,violated,,,0.0,0.0,,,0.004697176002082415,1344,True
+custom_overlap_chain_prob_12,overlap_chain_probability,12,satisfied,probability,satisfied,satisfied,0.25,0.25,,,,,0.01948437199462205,68608,True
+custom_back_edge_prob_12,back_edge_probability,12,satisfied,probability,satisfied,satisfied,0.25,0.25,,,,,0.030705804005265236,265216,True
+custom_split_merge_prob_14,split_merge_probability,14,satisfied,probability,satisfied,satisfied,1.0,1.0,,,,,0.43602022899722215,67109056,True
+custom_ccx_ladder_reach_15,ccx_ladder_reachability,15,satisfied,reachability,satisfied,satisfied,,,1.0,1.0,11,11,0.01580587100033881,262656,True
+custom_disconnected_product_prob_20,disconnected_product_probability,20,satisfied,probability,satisfied,satisfied,0.12499999999999997,0.12499999999999997,,,,,0.018529187997046392,68352,True

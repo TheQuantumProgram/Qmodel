@@ -1,0 +1,72 @@
+{
+  "abstract": {
+    "bitwise_probabilities": [
+      0.9999999999999993,
+      0.9999999999999997,
+      0.9999999999999997,
+      0.9999999999999997,
+      0.9999999999999992,
+      0.9999999999999997,
+      0.9999999999999997,
+      0.9999999999999997,
+      0.9999999999999989
+    ],
+    "elapsed_seconds": 0.01954686099998071,
+    "judgment": "satisfied",
+    "max_execution_bytes": 768,
+    "max_execution_mib": 0.000732421875,
+    "max_state_bytes": 640,
+    "max_state_mib": 0.0006103515625,
+    "max_transition_bytes": 768,
+    "max_transition_mib": 0.000732421875,
+    "probability": 0.9999999999999989,
+    "threshold": 0.999999
+  },
+  "assertion_kind": "probability",
+  "assertion_name": "bv_hidden_string_probability",
+  "comparison": {
+    "abstract_ideal_pure_lower_bound": {
+      "max_execution_bytes": 320,
+      "max_execution_mib": 0.00030517578125,
+      "max_state_bytes": 320,
+      "max_state_mib": 0.00030517578125,
+      "max_transition_bytes": 320,
+      "max_transition_mib": 0.00030517578125
+    },
+    "full_execution": {
+      "density_matrix_bytes": 16777216,
+      "density_matrix_mib": 16.0,
+      "qubit_count": 10,
+      "statevector_bytes": 16384,
+      "statevector_mib": 0.015625,
+      "time_benchmark": {
+        "assertion_evaluation_seconds": 0.006237152999801765,
+        "concrete_backend_elapsed_seconds": 0.007685494999805087,
+        "cutoff_qubits": 22,
+        "mode": "measured",
+        "statevector_elapsed_seconds": 0.001448342000003322
+      }
+    }
+  },
+  "concrete": {
+    "bitwise_probabilities": [
+      0.999999999999997,
+      0.999999999999997,
+      0.999999999999997,
+      0.999999999999997,
+      0.999999999999997,
+      0.999999999999997,
+      0.999999999999997,
+      0.999999999999997,
+      0.999999999999997
+    ],
+    "judgment": "satisfied",
+    "probability": 0.999999999999997,
+    "threshold": 0.999999
+  },
+  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/BV/bv_10_sparse.qmodel",
+  "program_name": "bv_10_sparse",
+  "reconstruction_mode": "trusted",
+  "run_concrete": true,
+  "total_elapsed_seconds": 0.08073819099990942
+}

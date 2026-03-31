@@ -1,0 +1,50 @@
+{
+  "abstract": {
+    "elapsed_seconds": 0.006014731996401679,
+    "judgment": "satisfied",
+    "max_execution_bytes": 2304,
+    "max_execution_mib": 0.002197265625,
+    "max_state_bytes": 2304,
+    "max_state_mib": 0.002197265625,
+    "max_transition_bytes": 2304,
+    "max_transition_mib": 0.002197265625,
+    "probability": 0.12499999999999997,
+    "threshold": 0.125
+  },
+  "assertion_kind": "probability",
+  "assertion_name": "disconnected_product_probability",
+  "comparison": {
+    "abstract_ideal_pure_lower_bound": {
+      "max_execution_bytes": 384,
+      "max_execution_mib": 0.0003662109375,
+      "max_state_bytes": 384,
+      "max_state_mib": 0.0003662109375,
+      "max_transition_bytes": 384,
+      "max_transition_mib": 0.0003662109375
+    },
+    "full_execution": {
+      "density_matrix_bytes": 16777216,
+      "density_matrix_mib": 16.0,
+      "qubit_count": 10,
+      "statevector_bytes": 16384,
+      "statevector_mib": 0.015625,
+      "time_benchmark": {
+        "assertion_evaluation_seconds": 0.00023342300119111314,
+        "concrete_backend_elapsed_seconds": 0.0008110400012810715,
+        "cutoff_qubits": 22,
+        "mode": "measured",
+        "statevector_elapsed_seconds": 0.0005776170000899583
+      }
+    }
+  },
+  "concrete": {
+    "judgment": "satisfied",
+    "probability": 0.12499999999999997,
+    "threshold": 0.125
+  },
+  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/Custom/custom_disconnected_product_prob_10.qmodel",
+  "program_name": "custom_disconnected_product_prob_10",
+  "reconstruction_mode": "trusted",
+  "run_concrete": true,
+  "total_elapsed_seconds": 0.021902835003857035
+}

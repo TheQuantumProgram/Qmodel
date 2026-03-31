@@ -1,0 +1,61 @@
+{
+  "abstract": {
+    "bitwise_probabilities": [
+      0.9993745964350913,
+      0.9993444682080349,
+      0.9992050023567935,
+      0.9981362912566721,
+      0.9975923633360948,
+      0.9999999999999964,
+      0.9999999999999967,
+      0.9999999999999971,
+      0.9999999999999974,
+      0.999999999999998
+    ],
+    "elapsed_seconds": 0.057785828999840305,
+    "judgment": "satisfied",
+    "max_execution_bytes": 65792,
+    "max_execution_mib": 0.062744140625,
+    "max_state_bytes": 16704,
+    "max_state_mib": 0.01593017578125,
+    "max_transition_bytes": 65792,
+    "max_transition_mib": 0.062744140625,
+    "probability": 0.9975923633360948,
+    "threshold": 0.997
+  },
+  "assertion_kind": "probability",
+  "assertion_name": "recover_target_bits",
+  "comparison": {
+    "abstract_ideal_pure_lower_bound": {
+      "max_execution_bytes": 1152,
+      "max_execution_mib": 0.0010986328125,
+      "max_state_bytes": 672,
+      "max_state_mib": 0.000640869140625,
+      "max_transition_bytes": 1152,
+      "max_transition_mib": 0.0010986328125
+    },
+    "full_execution": {
+      "density_matrix_bytes": 16777216,
+      "density_matrix_mib": 16.0,
+      "qubit_count": 10,
+      "statevector_bytes": 16384,
+      "statevector_mib": 0.015625,
+      "time_benchmark": {
+        "assertion_evaluation_seconds": 0.010348143000555865,
+        "concrete_backend_elapsed_seconds": 0.01685803400050645,
+        "cutoff_qubits": 22,
+        "mode": "measured",
+        "statevector_elapsed_seconds": 0.006509890999950585
+      }
+    }
+  },
+  "concrete": {
+    "reason": "Concrete backend disabled by default; pass --run-concrete to enable it.",
+    "status": "skipped"
+  },
+  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/IQFT/iqft_10_w5.qmodel",
+  "program_name": "iqft_10_w5",
+  "reconstruction_mode": "trusted",
+  "run_concrete": false,
+  "total_elapsed_seconds": 0.354843148999862
+}

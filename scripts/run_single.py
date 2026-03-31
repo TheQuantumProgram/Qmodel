@@ -22,7 +22,7 @@ from qmodel.concrete import (
 from qmodel.parser import parse_qmodel_file
 
 
-def _parse_args() -> argparse.Namespace:
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("model", help="Path to one .qmodel file")
     parser.add_argument(
@@ -36,7 +36,11 @@ def _parse_args() -> argparse.Namespace:
         default="trusted",
         help="Abstract reconstruction mode. Default: trusted",
     )
-    return parser.parse_args()
+    return parser
+
+
+def _parse_args() -> argparse.Namespace:
+    return build_parser().parse_args()
 
 
 def _evaluate_concrete(spec) -> dict[str, Any]:
@@ -47,27 +51,31 @@ def _abstract_state_bytes(state) -> int:
     return sum(int(unit.witness_rho.data.nbytes) for unit in state.units)
 
 
-def main() -> int:
+def run_model(
+    model: str | Path,
+    *,
+    run_concrete: bool = False,
+    mode: str = "trusted",
+) -> dict[str, Any]:
     total_start = perf_counter()
-    args = _parse_args()
-    model_path = Path(args.model).resolve()
+    model_path = Path(model).resolve()
     spec = parse_qmodel_file(str(model_path))
 
     abstract_start = perf_counter()
     if spec.assertions[0].kind == "probability":
-        execution = execute_abstract_to_final_state(spec, reconstruction_mode=args.mode)
+        execution = execute_abstract_to_final_state(spec, reconstruction_mode=mode)
         abstract_result = evaluate_terminal_probability_assertion_on_state(
             execution.final_state,
             spec,
-            reconstruction_mode=args.mode,
+            reconstruction_mode=mode,
         )
         abstract_elapsed = perf_counter() - abstract_start
         max_state_bytes = execution.stats.max_state_bytes
         max_transition_bytes = execution.stats.max_transition_bytes
         comparison_payload = build_comparison_payload_from_stats(execution.stats, spec)
     else:
-        trace = build_abstract_trace(spec, reconstruction_mode=args.mode)
-        abstract_result = evaluate_assertion(trace, spec, reconstruction_mode=args.mode)
+        trace = build_abstract_trace(spec, reconstruction_mode=mode)
+        abstract_result = evaluate_assertion(trace, spec, reconstruction_mode=mode)
         abstract_elapsed = perf_counter() - abstract_start
         max_state_bytes = max((_abstract_state_bytes(state) for state in trace.states), default=0)
         max_transition_bytes = max(
@@ -91,7 +99,7 @@ def main() -> int:
         "max_execution_mib": max_execution_bytes / (1024 * 1024),
     }
     concrete_result: dict[str, Any]
-    if args.run_concrete:
+    if run_concrete:
         concrete_result = _evaluate_concrete(spec)
     else:
         concrete_result = {
@@ -99,11 +107,11 @@ def main() -> int:
             "reason": "Concrete backend disabled by default; pass --run-concrete to enable it.",
         }
 
-    payload = {
+    return {
         "model_path": str(model_path),
         "program_name": spec.program_name,
-        "reconstruction_mode": args.mode,
-        "run_concrete": args.run_concrete,
+        "reconstruction_mode": mode,
+        "run_concrete": run_concrete,
         "assertion_name": spec.assertions[0].name,
         "assertion_kind": spec.assertions[0].kind,
         "total_elapsed_seconds": perf_counter() - total_start,
@@ -111,6 +119,11 @@ def main() -> int:
         "abstract": abstract_result,
         "comparison": comparison_payload,
     }
+
+
+def main() -> int:
+    args = _parse_args()
+    payload = run_model(args.model, run_concrete=args.run_concrete, mode=args.mode)
     print(json.dumps(payload, indent=2, sort_keys=True))
     return 0
 

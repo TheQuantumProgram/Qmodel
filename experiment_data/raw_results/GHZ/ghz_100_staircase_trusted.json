@@ -1,0 +1,47 @@
+{
+  "abstract": {
+    "elapsed_seconds": 0.48563492799985397,
+    "judgment": "satisfied",
+    "max_execution_bytes": 28672,
+    "max_execution_mib": 0.02734375,
+    "max_state_bytes": 25344,
+    "max_state_mib": 0.024169921875,
+    "max_transition_bytes": 28672,
+    "max_transition_mib": 0.02734375,
+    "probability": 0.4999999999999999,
+    "threshold": 0.5
+  },
+  "assertion_kind": "probability",
+  "assertion_name": "tail_one_probability",
+  "comparison": {
+    "abstract_ideal_pure_lower_bound": {
+      "max_execution_bytes": 6400,
+      "max_execution_mib": 0.006103515625,
+      "max_state_bytes": 6336,
+      "max_state_mib": 0.00604248046875,
+      "max_transition_bytes": 6400,
+      "max_transition_mib": 0.006103515625
+    },
+    "full_execution": {
+      "density_matrix_bytes": 25711008708143844408671393477458601640355247900524685364822016,
+      "density_matrix_mib": 2.4519928653854222e+55,
+      "qubit_count": 100,
+      "statevector_bytes": 20282409603651670423947251286016,
+      "statevector_mib": 1.9342813113834067e+25,
+      "time_benchmark": {
+        "cutoff_qubits": 22,
+        "mode": "skipped",
+        "reason": "qubit count exceeds automatic timing cutoff"
+      }
+    }
+  },
+  "concrete": {
+    "reason": "Concrete backend disabled by default; pass --run-concrete to enable it.",
+    "status": "skipped"
+  },
+  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/GHZ/ghz_100_staircase.qmodel",
+  "program_name": "ghz_100_staircase",
+  "reconstruction_mode": "trusted",
+  "run_concrete": false,
+  "total_elapsed_seconds": 2.514792075000514
+}

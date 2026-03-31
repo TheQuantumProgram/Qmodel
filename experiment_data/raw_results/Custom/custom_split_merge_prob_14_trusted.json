@@ -1,0 +1,50 @@
+{
+  "abstract": {
+    "elapsed_seconds": 0.43602022899722215,
+    "judgment": "satisfied",
+    "max_execution_bytes": 67109056,
+    "max_execution_mib": 64.00018310546875,
+    "max_state_bytes": 5312,
+    "max_state_mib": 0.00506591796875,
+    "max_transition_bytes": 67109056,
+    "max_transition_mib": 64.00018310546875,
+    "probability": 1.0,
+    "threshold": 1.0
+  },
+  "assertion_kind": "probability",
+  "assertion_name": "split_merge_basis_probability",
+  "comparison": {
+    "abstract_ideal_pure_lower_bound": {
+      "max_execution_bytes": 32864,
+      "max_execution_mib": 0.031341552734375,
+      "max_state_bytes": 736,
+      "max_state_mib": 0.000701904296875,
+      "max_transition_bytes": 32864,
+      "max_transition_mib": 0.031341552734375
+    },
+    "full_execution": {
+      "density_matrix_bytes": 4294967296,
+      "density_matrix_mib": 4096.0,
+      "qubit_count": 14,
+      "statevector_bytes": 262144,
+      "statevector_mib": 0.25,
+      "time_benchmark": {
+        "assertion_evaluation_seconds": 0.0021934850010438822,
+        "concrete_backend_elapsed_seconds": 0.004209857004752848,
+        "cutoff_qubits": 22,
+        "mode": "measured",
+        "statevector_elapsed_seconds": 0.002016372003708966
+      }
+    }
+  },
+  "concrete": {
+    "judgment": "satisfied",
+    "probability": 1.0,
+    "threshold": 1.0
+  },
+  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/Custom/custom_split_merge_prob_14.qmodel",
+  "program_name": "custom_split_merge_prob_14",
+  "reconstruction_mode": "trusted",
+  "run_concrete": true,
+  "total_elapsed_seconds": 0.47053811199293705
+}

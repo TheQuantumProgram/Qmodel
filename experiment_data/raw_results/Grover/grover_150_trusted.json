@@ -1,0 +1,47 @@
+{
+  "abstract": {
+    "elapsed_seconds": 894.2902945159985,
+    "judgment": "satisfied",
+    "max_execution_bytes": 67117760,
+    "max_execution_mib": 64.00848388671875,
+    "max_state_bytes": 67117760,
+    "max_state_mib": 64.00848388671875,
+    "max_transition_bytes": 67117760,
+    "max_transition_mib": 64.00848388671875,
+    "probability": 0.9965856807867852,
+    "threshold": 0.99
+  },
+  "assertion_kind": "probability",
+  "assertion_name": "marked_subspace_probability",
+  "comparison": {
+    "abstract_ideal_pure_lower_bound": {
+      "max_execution_bytes": 37216,
+      "max_execution_mib": 0.035491943359375,
+      "max_state_bytes": 37216,
+      "max_state_mib": 0.035491943359375,
+      "max_transition_bytes": 37216,
+      "max_transition_mib": 0.035491943359375
+    },
+    "full_execution": {
+      "density_matrix_bytes": 32592575621351777380295131014550050576823494298654980010178247189670100796213387298934358016,
+      "density_matrix_mib": 3.1082702275611665e+85,
+      "qubit_count": 150,
+      "statevector_bytes": 22835963083295358096932575511191922182123945984,
+      "statevector_mib": 2.1778071482940062e+40,
+      "time_benchmark": {
+        "cutoff_qubits": 22,
+        "mode": "skipped",
+        "reason": "qubit count exceeds automatic timing cutoff"
+      }
+    }
+  },
+  "concrete": {
+    "reason": "Concrete backend disabled by default; pass --run-concrete to enable it.",
+    "status": "skipped"
+  },
+  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/Grover/grover_150.qmodel",
+  "program_name": "grover_150",
+  "reconstruction_mode": "trusted",
+  "run_concrete": false,
+  "total_elapsed_seconds": 901.1673656890016
+}

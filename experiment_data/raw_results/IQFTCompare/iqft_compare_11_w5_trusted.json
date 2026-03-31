@@ -1,0 +1,76 @@
+{
+  "abstract": {
+    "bitwise_probabilities": [
+      0.9968456119795842,
+      0.999374596435091,
+      0.9993444682080346,
+      0.9992050023567931,
+      0.9981362912566718,
+      0.9975923633360946,
+      0.9999999999999964,
+      0.9999999999999967,
+      0.9999999999999971,
+      0.9999999999999974,
+      0.999999999999998
+    ],
+    "elapsed_seconds": 0.06061980000049516,
+    "judgment": "satisfied",
+    "max_execution_bytes": 65856,
+    "max_execution_mib": 0.06280517578125,
+    "max_state_bytes": 16768,
+    "max_state_mib": 0.0159912109375,
+    "max_transition_bytes": 65856,
+    "max_transition_mib": 0.06280517578125,
+    "probability": 0.9968456119795842,
+    "threshold": 0.996
+  },
+  "assertion_kind": "probability",
+  "assertion_name": "recover_target_bits",
+  "comparison": {
+    "abstract_ideal_pure_lower_bound": {
+      "max_execution_bytes": 1184,
+      "max_execution_mib": 0.001129150390625,
+      "max_state_bytes": 704,
+      "max_state_mib": 0.00067138671875,
+      "max_transition_bytes": 1184,
+      "max_transition_mib": 0.001129150390625
+    },
+    "full_execution": {
+      "density_matrix_bytes": 67108864,
+      "density_matrix_mib": 64.0,
+      "qubit_count": 11,
+      "statevector_bytes": 32768,
+      "statevector_mib": 0.03125,
+      "time_benchmark": {
+        "assertion_evaluation_seconds": 0.018008580000241636,
+        "concrete_backend_elapsed_seconds": 0.02555765299985069,
+        "cutoff_qubits": 22,
+        "mode": "measured",
+        "statevector_elapsed_seconds": 0.007549072999609052
+      }
+    }
+  },
+  "concrete": {
+    "bitwise_probabilities": [
+      0.9968456119795841,
+      0.9993745964350907,
+      0.9993444682080344,
+      0.9992050023567928,
+      0.9981362912566715,
+      0.9975923633360944,
+      0.9999999999999959,
+      0.9999999999999959,
+      0.9999999999999959,
+      0.9999999999999959,
+      0.9999999999999959
+    ],
+    "judgment": "satisfied",
+    "probability": 0.9968456119795841,
+    "threshold": 0.996
+  },
+  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/IQFTCompare/iqft_compare_11_w5.qmodel",
+  "program_name": "iqft_compare_11_w5",
+  "reconstruction_mode": "trusted",
+  "run_concrete": true,
+  "total_elapsed_seconds": 0.27104471100028604
+}

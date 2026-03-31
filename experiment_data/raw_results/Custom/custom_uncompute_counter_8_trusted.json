@@ -1,0 +1,50 @@
+{
+  "abstract": {
+    "elapsed_seconds": 0.004697176002082415,
+    "first_reached_index": null,
+    "judgment": "violated",
+    "max_execution_bytes": 1344,
+    "max_execution_mib": 0.00128173828125,
+    "max_overlap": 0.0,
+    "max_state_bytes": 1344,
+    "max_state_mib": 0.00128173828125,
+    "max_transition_bytes": 1344,
+    "max_transition_mib": 0.00128173828125
+  },
+  "assertion_kind": "reachability",
+  "assertion_name": "midway_mark_reachable",
+  "comparison": {
+    "abstract_ideal_pure_lower_bound": {
+      "max_execution_bytes": 288,
+      "max_execution_mib": 0.000274658203125,
+      "max_state_bytes": 288,
+      "max_state_mib": 0.000274658203125,
+      "max_transition_bytes": 288,
+      "max_transition_mib": 0.000274658203125
+    },
+    "full_execution": {
+      "density_matrix_bytes": 1048576,
+      "density_matrix_mib": 1.0,
+      "qubit_count": 8,
+      "statevector_bytes": 4096,
+      "statevector_mib": 0.00390625,
+      "time_benchmark": {
+        "assertion_evaluation_seconds": null,
+        "concrete_backend_elapsed_seconds": 0.0010115699988091365,
+        "cutoff_qubits": 22,
+        "mode": "measured",
+        "statevector_elapsed_seconds": 0.0006452440065913834
+      }
+    }
+  },
+  "concrete": {
+    "first_reached_index": null,
+    "judgment": "violated",
+    "max_overlap": 0.0
+  },
+  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/Custom/custom_uncompute_counter_8.qmodel",
+  "program_name": "custom_uncompute_counter_8",
+  "reconstruction_mode": "trusted",
+  "run_concrete": true,
+  "total_elapsed_seconds": 0.015766629003337584
+}

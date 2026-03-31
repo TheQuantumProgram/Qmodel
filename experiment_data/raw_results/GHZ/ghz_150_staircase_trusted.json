@@ -1,0 +1,47 @@
+{
+  "abstract": {
+    "elapsed_seconds": 1.1156415369996466,
+    "judgment": "satisfied",
+    "max_execution_bytes": 41472,
+    "max_execution_mib": 0.03955078125,
+    "max_state_bytes": 38144,
+    "max_state_mib": 0.036376953125,
+    "max_transition_bytes": 41472,
+    "max_transition_mib": 0.03955078125,
+    "probability": 0.4999999999999999,
+    "threshold": 0.5
+  },
+  "assertion_kind": "probability",
+  "assertion_name": "tail_one_probability",
+  "comparison": {
+    "abstract_ideal_pure_lower_bound": {
+      "max_execution_bytes": 9600,
+      "max_execution_mib": 0.0091552734375,
+      "max_state_bytes": 9536,
+      "max_state_mib": 0.00909423828125,
+      "max_transition_bytes": 9600,
+      "max_transition_mib": 0.0091552734375
+    },
+    "full_execution": {
+      "density_matrix_bytes": 32592575621351777380295131014550050576823494298654980010178247189670100796213387298934358016,
+      "density_matrix_mib": 3.1082702275611665e+85,
+      "qubit_count": 150,
+      "statevector_bytes": 22835963083295358096932575511191922182123945984,
+      "statevector_mib": 2.1778071482940062e+40,
+      "time_benchmark": {
+        "cutoff_qubits": 22,
+        "mode": "skipped",
+        "reason": "qubit count exceeds automatic timing cutoff"
+      }
+    }
+  },
+  "concrete": {
+    "reason": "Concrete backend disabled by default; pass --run-concrete to enable it.",
+    "status": "skipped"
+  },
+  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/GHZ/ghz_150_staircase.qmodel",
+  "program_name": "ghz_150_staircase",
+  "reconstruction_mode": "trusted",
+  "run_concrete": false,
+  "total_elapsed_seconds": 5.718678094000097
+}

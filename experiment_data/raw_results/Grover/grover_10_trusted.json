@@ -1,0 +1,50 @@
+{
+  "abstract": {
+    "elapsed_seconds": 0.010216624999884516,
+    "judgment": "satisfied",
+    "max_execution_bytes": 1472,
+    "max_execution_mib": 0.00140380859375,
+    "max_state_bytes": 1472,
+    "max_state_mib": 0.00140380859375,
+    "max_transition_bytes": 1472,
+    "max_transition_mib": 0.00140380859375,
+    "probability": 0.9999999999999988,
+    "threshold": 0.999999
+  },
+  "assertion_kind": "probability",
+  "assertion_name": "marked_subspace_probability",
+  "comparison": {
+    "abstract_ideal_pure_lower_bound": {
+      "max_execution_bytes": 352,
+      "max_execution_mib": 0.000335693359375,
+      "max_state_bytes": 352,
+      "max_state_mib": 0.000335693359375,
+      "max_transition_bytes": 352,
+      "max_transition_mib": 0.000335693359375
+    },
+    "full_execution": {
+      "density_matrix_bytes": 16777216,
+      "density_matrix_mib": 16.0,
+      "qubit_count": 10,
+      "statevector_bytes": 16384,
+      "statevector_mib": 0.015625,
+      "time_benchmark": {
+        "assertion_evaluation_seconds": 0.00021945299886283465,
+        "concrete_backend_elapsed_seconds": 0.0012334179991739802,
+        "cutoff_qubits": 22,
+        "mode": "measured",
+        "statevector_elapsed_seconds": 0.0010139650003111456
+      }
+    }
+  },
+  "concrete": {
+    "judgment": "satisfied",
+    "probability": 0.9999999999999983,
+    "threshold": 0.999999
+  },
+  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/Grover/grover_10.qmodel",
+  "program_name": "grover_10",
+  "reconstruction_mode": "trusted",
+  "run_concrete": true,
+  "total_elapsed_seconds": 0.04301915000178269
+}

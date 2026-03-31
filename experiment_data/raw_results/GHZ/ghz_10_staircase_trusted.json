@@ -1,0 +1,50 @@
+{
+  "abstract": {
+    "elapsed_seconds": 0.01643766200004393,
+    "judgment": "satisfied",
+    "max_execution_bytes": 5632,
+    "max_execution_mib": 0.00537109375,
+    "max_state_bytes": 2304,
+    "max_state_mib": 0.002197265625,
+    "max_transition_bytes": 5632,
+    "max_transition_mib": 0.00537109375,
+    "probability": 0.4999999999999999,
+    "threshold": 0.5
+  },
+  "assertion_kind": "probability",
+  "assertion_name": "tail_one_probability",
+  "comparison": {
+    "abstract_ideal_pure_lower_bound": {
+      "max_execution_bytes": 640,
+      "max_execution_mib": 0.0006103515625,
+      "max_state_bytes": 576,
+      "max_state_mib": 0.00054931640625,
+      "max_transition_bytes": 640,
+      "max_transition_mib": 0.0006103515625
+    },
+    "full_execution": {
+      "density_matrix_bytes": 16777216,
+      "density_matrix_mib": 16.0,
+      "qubit_count": 10,
+      "statevector_bytes": 16384,
+      "statevector_mib": 0.015625,
+      "time_benchmark": {
+        "assertion_evaluation_seconds": 0.00015315100017687655,
+        "concrete_backend_elapsed_seconds": 0.0020120120002502517,
+        "cutoff_qubits": 22,
+        "mode": "measured",
+        "statevector_elapsed_seconds": 0.0018588610000733752
+      }
+    }
+  },
+  "concrete": {
+    "judgment": "satisfied",
+    "probability": 0.4999999999999999,
+    "threshold": 0.5
+  },
+  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/GHZ/ghz_10_staircase.qmodel",
+  "program_name": "ghz_10_staircase",
+  "reconstruction_mode": "trusted",
+  "run_concrete": true,
+  "total_elapsed_seconds": 0.04059028599976955
+}

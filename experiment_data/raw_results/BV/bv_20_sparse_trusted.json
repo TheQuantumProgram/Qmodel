@@ -1,0 +1,92 @@
+{
+  "abstract": {
+    "bitwise_probabilities": [
+      0.9999999999999993,
+      0.9999999999999997,
+      0.9999999999999997,
+      0.9999999999999997,
+      0.9999999999999992,
+      0.9999999999999997,
+      0.9999999999999997,
+      0.9999999999999997,
+      0.9999999999999997,
+      0.9999999999999989,
+      0.9999999999999997,
+      0.9999999999999997,
+      0.9999999999999997,
+      0.9999999999999997,
+      0.9999999999999988,
+      0.9999999999999997,
+      0.9999999999999997,
+      0.9999999999999997,
+      0.9999999999999986
+    ],
+    "elapsed_seconds": 0.04273693799996181,
+    "judgment": "satisfied",
+    "max_execution_bytes": 1408,
+    "max_execution_mib": 0.0013427734375,
+    "max_state_bytes": 1280,
+    "max_state_mib": 0.001220703125,
+    "max_transition_bytes": 1408,
+    "max_transition_mib": 0.0013427734375,
+    "probability": 0.9999999999999986,
+    "threshold": 0.999999
+  },
+  "assertion_kind": "probability",
+  "assertion_name": "bv_hidden_string_probability",
+  "comparison": {
+    "abstract_ideal_pure_lower_bound": {
+      "max_execution_bytes": 640,
+      "max_execution_mib": 0.0006103515625,
+      "max_state_bytes": 640,
+      "max_state_mib": 0.0006103515625,
+      "max_transition_bytes": 640,
+      "max_transition_mib": 0.0006103515625
+    },
+    "full_execution": {
+      "density_matrix_bytes": 17592186044416,
+      "density_matrix_mib": 16777216.0,
+      "qubit_count": 20,
+      "statevector_bytes": 16777216,
+      "statevector_mib": 16.0,
+      "time_benchmark": {
+        "assertion_evaluation_seconds": 9.864650986000015,
+        "concrete_backend_elapsed_seconds": 10.308945119999862,
+        "cutoff_qubits": 22,
+        "mode": "measured",
+        "statevector_elapsed_seconds": 0.44429413399984696
+      }
+    }
+  },
+  "concrete": {
+    "bitwise_probabilities": [
+      0.9999999999999939,
+      0.9999999999999939,
+      0.9999999999999939,
+      0.9999999999999939,
+      0.9999999999999939,
+      0.9999999999999939,
+      0.9999999999999939,
+      0.9999999999999939,
+      0.9999999999999939,
+      0.9999999999999939,
+      0.9999999999999939,
+      0.9999999999999939,
+      0.9999999999999939,
+      0.9999999999999939,
+      0.9999999999999939,
+      0.9999999999999939,
+      0.9999999999999939,
+      0.9999999999999939,
+      0.9999999999999939
+    ],
+    "judgment": "satisfied",
+    "probability": 0.9999999999999939,
+    "threshold": 0.999999
+  },
+  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/BV/bv_20_sparse.qmodel",
+  "program_name": "bv_20_sparse",
+  "reconstruction_mode": "trusted",
+  "run_concrete": true,
+  "total_elapsed_seconds": 20.719196657999873
+}

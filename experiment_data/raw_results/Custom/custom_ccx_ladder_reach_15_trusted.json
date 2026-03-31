@@ -1,0 +1,50 @@
+{
+  "abstract": {
+    "elapsed_seconds": 0.01580587100033881,
+    "first_reached_index": 11,
+    "judgment": "satisfied",
+    "max_execution_bytes": 262656,
+    "max_execution_mib": 0.25048828125,
+    "max_overlap": 1.0,
+    "max_state_bytes": 2688,
+    "max_state_mib": 0.0025634765625,
+    "max_transition_bytes": 262656,
+    "max_transition_mib": 0.25048828125
+  },
+  "assertion_kind": "reachability",
+  "assertion_name": "ladder_flag_reachable",
+  "comparison": {
+    "abstract_ideal_pure_lower_bound": {
+      "max_execution_bytes": 2304,
+      "max_execution_mib": 0.002197265625,
+      "max_state_bytes": 576,
+      "max_state_mib": 0.00054931640625,
+      "max_transition_bytes": 2304,
+      "max_transition_mib": 0.002197265625
+    },
+    "full_execution": {
+      "density_matrix_bytes": 17179869184,
+      "density_matrix_mib": 16384.0,
+      "qubit_count": 15,
+      "statevector_bytes": 524288,
+      "statevector_mib": 0.5,
+      "time_benchmark": {
+        "assertion_evaluation_seconds": null,
+        "concrete_backend_elapsed_seconds": 0.027629014002741314,
+        "cutoff_qubits": 22,
+        "mode": "measured",
+        "statevector_elapsed_seconds": 0.011972232001426164
+      }
+    }
+  },
+  "concrete": {
+    "first_reached_index": 11,
+    "judgment": "satisfied",
+    "max_overlap": 1.0
+  },
+  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/Custom/custom_ccx_ladder_reach_15.qmodel",
+  "program_name": "custom_ccx_ladder_reach_15",
+  "reconstruction_mode": "trusted",
+  "run_concrete": true,
+  "total_elapsed_seconds": 0.09906261800642824
+}

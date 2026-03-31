@@ -1,0 +1,47 @@
+{
+  "abstract": {
+    "elapsed_seconds": 78.22768135499791,
+    "judgment": "satisfied",
+    "max_execution_bytes": 264896,
+    "max_execution_mib": 0.25262451171875,
+    "max_state_bytes": 264896,
+    "max_state_mib": 0.25262451171875,
+    "max_transition_bytes": 264896,
+    "max_transition_mib": 0.25262451171875,
+    "probability": 0.9613189697265574,
+    "threshold": 0.96
+  },
+  "assertion_kind": "probability",
+  "assertion_name": "marked_subspace_probability",
+  "comparison": {
+    "abstract_ideal_pure_lower_bound": {
+      "max_execution_bytes": 3424,
+      "max_execution_mib": 0.003265380859375,
+      "max_state_bytes": 3424,
+      "max_state_mib": 0.003265380859375,
+      "max_transition_bytes": 3424,
+      "max_transition_mib": 0.003265380859375
+    },
+    "full_execution": {
+      "density_matrix_bytes": 20282409603651670423947251286016,
+      "density_matrix_mib": 1.9342813113834067e+25,
+      "qubit_count": 50,
+      "statevector_bytes": 18014398509481984,
+      "statevector_mib": 17179869184.0,
+      "time_benchmark": {
+        "cutoff_qubits": 22,
+        "mode": "skipped",
+        "reason": "qubit count exceeds automatic timing cutoff"
+      }
+    }
+  },
+  "concrete": {
+    "reason": "Concrete backend disabled by default; pass --run-concrete to enable it.",
+    "status": "skipped"
+  },
+  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/Grover/grover_50.qmodel",
+  "program_name": "grover_50",
+  "reconstruction_mode": "trusted",
+  "run_concrete": false,
+  "total_elapsed_seconds": 79.18641963400296
+}

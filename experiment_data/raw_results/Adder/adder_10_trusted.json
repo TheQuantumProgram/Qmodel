@@ -1,0 +1,61 @@
+{
+  "abstract": {
+    "bitwise_probabilities": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "elapsed_seconds": 0.030046473000766127,
+    "judgment": "satisfied",
+    "max_execution_bytes": 1472,
+    "max_execution_mib": 0.00140380859375,
+    "max_state_bytes": 1472,
+    "max_state_mib": 0.00140380859375,
+    "max_transition_bytes": 1472,
+    "max_transition_mib": 0.00140380859375,
+    "probability": 1.0,
+    "threshold": 0.999999
+  },
+  "assertion_kind": "probability",
+  "assertion_name": "adder_output_probability",
+  "comparison": {
+    "abstract_ideal_pure_lower_bound": {
+      "max_execution_bytes": 352,
+      "max_execution_mib": 0.000335693359375,
+      "max_state_bytes": 352,
+      "max_state_mib": 0.000335693359375,
+      "max_transition_bytes": 352,
+      "max_transition_mib": 0.000335693359375
+    },
+    "full_execution": {
+      "density_matrix_bytes": 16777216,
+      "density_matrix_mib": 16.0,
+      "qubit_count": 10,
+      "statevector_bytes": 16384,
+      "statevector_mib": 0.015625,
+      "time_benchmark": {
+        "assertion_evaluation_seconds": 0.0019302780001453357,
+        "concrete_backend_elapsed_seconds": 0.007711489999564947,
+        "cutoff_qubits": 22,
+        "mode": "measured",
+        "statevector_elapsed_seconds": 0.005781211999419611
+      }
+    }
+  },
+  "concrete": {
+    "reason": "Concrete backend disabled by default; pass --run-concrete to enable it.",
+    "status": "skipped"
+  },
+  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/Adder/adder_10.qmodel",
+  "program_name": "adder_10",
+  "reconstruction_mode": "trusted",
+  "run_concrete": false,
+  "total_elapsed_seconds": 0.11278588400091394
+}
