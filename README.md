@@ -2,18 +2,45 @@
 
 This directory contains the executable code for the abstraction-based modeling and verification project.
 
+
+## Quick Start
+
+1. Create and activate a Python environment, for example:
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate
+   ```
+2. Install the runnable environment snapshot:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Run one model:
+   ```bash
+   python scripts/qmodel_cli.py run tests/models/clifford_bell.qmodel
+   ```
+4. Run all formal experiment models:
+   ```bash
+   python scripts/qmodel_cli.py run-all
+   ```
+5. Run one model family only:
+   ```bash
+   python scripts/qmodel_cli.py run-all --family GHZ
+   ```
+6. Enable the concrete backend only for small models when an exact reference is needed:
+   ```bash
+   python scripts/qmodel_cli.py run tests/models/clifford_bell.qmodel --run-concrete
+   ```
+
 ## Layout
 
 - `src/qmodel/`: Python package for program specification, parsing, concrete simulation, abstract modeling, assertions, and benchmarks.
 - `docs/`: Format notes and local project conventions for handwritten models.
 - `tests/models/`: Handwritten example `.qmodel` files used by the test suite.
 - `experiment_data/models/`: Formal experiment models for actual evaluation runs, organized by algorithm family.
-- `experiment_data/generated_instances/`: Auto-generated benchmark instances.
 - `experiment_data/raw_results/`: Raw experiment outputs such as JSON and CSV.
 - `experiment_data/summaries/`: Aggregated tables and processed summaries.
-- `scripts/`: Command-line entry points and future batch-running helpers.
+- `scripts/`: Command-line entry points and benchmark-running helpers.
 - `tests/`: Unit tests for core components.
-- `figure_create/`: Figure-generation utilities used by the manuscript.
 
 ## Current status
 
@@ -70,7 +97,7 @@ Current BV formal models:
 
 Current IQFT formal models:
 - sliding-window IQFT recovery: `n = 10, 20, 50, 100, 150, 200`, all with window size `5`
-- small comparison suite for abstract/full-execution cost ratios: `n = 5, 6, ..., 20`, all with window size `5`
+- small comparison suite for abstract/full-execution cost ratios: `n = 10, 11, ..., 20`, all with window size `5`
 
 Current Adder formal models:
 - ripple-carry adders with dynamic carry-window schedules: `n = 10, 20, 50, 100, 150, 200`
@@ -100,11 +127,12 @@ Current Custom formal models:
   - `custom_disconnected_product_prob_20`
 
 Current limitations:
-- the benchmark-running scripts in `scripts/` are still placeholders
+- the batch runner is intentionally lightweight and currently prints aggregated JSON payloads to stdout instead of writing raw-result files automatically
 - tolerant reconstruction across overlapping units is still heuristic when no direct shared certificate covers the full requested workspace
 - the exact scope-state provider in the concrete backend remains only as a reference/debug utility
 
 Runner behavior:
+- `scripts/qmodel_cli.py` provides the Quick Start entry point for single-model and batch execution
 - `scripts/run_single.py` now runs the abstract backend by default
 - the concrete backend is skipped by default so large-`n` models are not forced into exact global simulation
 - pass `--run-concrete` only for small instances when an exact reference comparison is actually needed
