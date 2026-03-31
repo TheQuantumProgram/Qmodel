@@ -42,20 +42,18 @@ This directory contains the executable code for the abstraction-based modeling a
 - `scripts/`: Command-line entry points and benchmark-running helpers.
 - `tests/`: Unit tests for core components.
 
-## Current status
+## Capabilities
 
-Phase 1 is initialized:
+Specification and parsing:
 - core dataclasses for `QuantumProgramSpec`
 - basic validation utilities
 - package skeleton for later parser, concrete backend, abstract backend, assertions, and benchmarks
-
-Phase 2 and early Phase 3 are in place:
 - `.qmodel` field rules and examples are documented
 - supported gate vocabulary is recorded explicitly, including the Clifford gate set
 - `.qmodel` files can now be parsed into `QuantumProgramSpec`
 - `.qmodel` can now describe either a static unit layout or an explicit organization-state chain through `organization_schedule`
 
-Early Phase 4 is also in place:
+Concrete execution:
 - `QuantumProgramSpec` can now be translated into a Qiskit `QuantumCircuit`
 - supported gate mapping includes Clifford gates, `Ry`, `P`, `CCX`, `MCX`, and controlled `X`
 - terminal measurement is appended from the declarative specification
@@ -63,7 +61,7 @@ Early Phase 4 is also in place:
 - terminal probability assertions over declared measurement outcomes can now be evaluated exactly
 - basis-state reachability assertions can now be evaluated exactly along the concrete state trajectory
 
-Early abstract-execution support is also in place:
+Abstract execution:
 - abstract states store per-unit witness states and support projectors
 - abstract states also carry internal reconstruction certificates produced by merge-update-rewrite steps
 - abstract transitions update unit witnesses directly when a gate stays within one affected view
@@ -72,14 +70,14 @@ Early abstract-execution support is also in place:
 - checked reconstruction mode treats missing shared certificates on overlapping joins as modeling errors
 - reachability and terminal probability checks reconstruct queried scopes from unit-local witnesses and reconstruction certificates
 
-Current documentation assets:
+Documentation:
 - `docs/qmodel_format.md`: current `.qmodel` field rules, supported gate vocabulary, and examples
 - `tests/models/clifford_bell.qmodel`: minimal Clifford example using an explicit organization-state chain
 - `tests/models/clifford_gate_showcase.qmodel`: Clifford example using a repeated organization-state chain
 - `tests/models/ccx_overlap_demo.qmodel`: overlapping-view example with stepwise organization changes aligned with the manuscript
 - `experiment_data/models/README.md`: family-level catalog for formal experiment models
 
-Current formal experiment-model families:
+Formal Experiment-Model Families:
 - `experiment_data/models/GHZ/`: GHZ-state preparation and related staircase-entanglement instances
 - `experiment_data/models/BV/`: Bernstein-Vazirani instances with structured oracle layouts
 - `experiment_data/models/Grover/`: Grover-search instances and oracle/diffusion variants
@@ -88,24 +86,24 @@ Current formal experiment-model families:
 - `experiment_data/models/Adder/`: ripple-carry adders and related arithmetic-circuit families
 - `experiment_data/models/Custom/`: original circuit suites for overlap-heavy and structured-control stress tests
 
-Current GHZ formal models:
+GHZ Models:
 - standard staircase GHZ: `n = 10, 20, 50, 100, 150, 200`
 - biased-root staircase GHZ: `n = 20` with `p(root=1)=0.25`, and `n = 50` with `p(root=1)=0.75`
 
-Current BV formal models:
+BV Models:
 - sparse-oracle BV: `n = 10, 20, 50, 100, 150, 200`
 
-Current IQFT formal models:
+IQFT Models:
 - sliding-window IQFT recovery: `n = 10, 20, 50, 100, 150, 200`, all with window size `5`
 - small comparison suite for abstract/full-execution cost ratios: `n = 10, 11, ..., 20`, all with window size `5`
 
-Current Adder formal models:
+Adder Models:
 - ripple-carry adders with dynamic carry-window schedules: `n = 10, 20, 50, 100, 150, 200`
 
-Current Grover formal models:
+Grover Models:
 - bounded-local-core multi-solution Grover instances: `n = 10, 20, 50, 100, 150, 200`
 
-Current Custom formal models:
+Custom Models:
 - small positive baselines:
   - `custom_overlap_chain_prob_6`
   - `custom_back_edge_prob_6`
@@ -126,7 +124,7 @@ Current Custom formal models:
   - `custom_ccx_ladder_reach_15`
   - `custom_disconnected_product_prob_20`
 
-Current limitations:
+Limitations:
 - the batch runner is intentionally lightweight and currently prints aggregated JSON payloads to stdout instead of writing raw-result files automatically
 - tolerant reconstruction across overlapping units is still heuristic when no direct shared certificate covers the full requested workspace
 - the exact scope-state provider in the concrete backend remains only as a reference/debug utility
@@ -143,7 +141,7 @@ Runner behavior:
   - exact full-execution statevector/density-matrix space formulas
   - optional full-execution timing when the qubit count is below the automatic cutoff
 
-Current timing fields:
+Timing Fields:
 - `abstract.elapsed_seconds`
   - abstract backend only
   - includes abstract trace construction plus abstract assertion checking
@@ -157,7 +155,7 @@ Current timing fields:
   - whole `run_single.py` wall-clock time
   - includes abstract execution, optional full-execution timing, JSON assembly, and other runner overhead
 
-Current full-execution timing cutoff:
+Full-Execution Timing Cutoff:
 - `22` qubits
 - This was chosen from a local probe on the current machine:
   - `18` qubits: about `0.107s`
