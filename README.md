@@ -15,6 +15,7 @@ This directory contains the executable code for the abstraction-based modeling a
    python3 -m venv .venv
    source .venv/bin/activate
    ```
+   On Debian/Ubuntu, if `python3 -m venv` is unavailable, install `python3-venv` first.
 3. Install the runnable environment snapshot:
    ```bash
    pip install -r requirements.txt
