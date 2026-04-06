@@ -5,28 +5,33 @@ This directory contains the executable code for the abstraction-based modeling a
 
 ## Quick Start
 
-1. Create and activate a Python environment, for example:
+1. Clone the repository and enter the project directory:
+   ```bash
+   git clone https://github.com/TheQuantumModel/Qmodel.git
+   cd Qmodel
+   ```
+2. We recommend creating and activating a fresh Python virtual environment:
    ```bash
    python3 -m venv .venv
    source .venv/bin/activate
    ```
-2. Install the runnable environment snapshot:
+3. Install the runnable environment snapshot:
    ```bash
    pip install -r requirements.txt
    ```
-3. Run one model:
+4. Run one model:
    ```bash
    python scripts/qmodel_cli.py run tests/models/clifford_bell.qmodel
    ```
-4. Run all formal experiment models:
+5. Run all formal experiment models:
    ```bash
    python scripts/qmodel_cli.py run-all
    ```
-5. Run one model family only:
+6. Run one model family only:
    ```bash
    python scripts/qmodel_cli.py run-all --family GHZ
    ```
-6. Enable the concrete backend only for small models when an exact reference is needed:
+7. Enable the concrete backend only for small models when an exact reference is needed:
    ```bash
    python scripts/qmodel_cli.py run tests/models/clifford_bell.qmodel --run-concrete
    ```
