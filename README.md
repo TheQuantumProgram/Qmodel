@@ -23,17 +23,17 @@ This directory contains the executable code for the abstraction-based modeling a
    ```bash
    python scripts/qmodel_cli.py run tests/models/clifford_bell.qmodel
    ```
-5. Run all formal experiment models:
-   ```bash
-   python scripts/qmodel_cli.py run-all
-   ```
-6. Run one model family only:
+5. Run one model family:
    ```bash
    python scripts/qmodel_cli.py run-all --family GHZ
    ```
-7. Enable the concrete backend only for small models when an exact reference is needed:
+6. Enable the concrete backend only for small models when an exact reference is needed:
    ```bash
    python scripts/qmodel_cli.py run tests/models/clifford_bell.qmodel --run-concrete
+   ```
+7. Run the full benchmark sweep only when you intentionally want the complete experiment workload:
+   ```bash
+   python scripts/qmodel_cli.py run-all
    ```
 
 ## Layout
