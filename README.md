@@ -32,10 +32,19 @@ This directory contains the executable code for the abstraction-based modeling a
    ```bash
    python scripts/qmodel_cli.py run tests/models/clifford_bell.qmodel --run-concrete
    ```
-7. Run the full benchmark sweep only when you intentionally want the complete experiment workload:
+7. Run a lightweight sanity check:
+   ```bash
+   python -m unittest tests.test_quickstart_cli tests.test_run_single -v
+   ```
+8. Run the full benchmark sweep only when you intentionally want the complete experiment workload:
    ```bash
    python scripts/qmodel_cli.py run-all
    ```
+9. Run the full test suite only when you want complete repository verification:
+   ```bash
+   python -m unittest discover -s tests -v
+   ```
+   The full suite parses the largest tracked benchmark models and can take several minutes.
 
 ## Layout
 
