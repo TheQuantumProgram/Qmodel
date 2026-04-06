@@ -7,7 +7,7 @@ This directory contains the executable code for the abstraction-based modeling a
 
 1. Clone the repository and enter the project directory:
    ```bash
-   git clone https://github.com/TheQuantumModel/Qmodel.git
+   git clone https://github.com/TheQuantumProgram/Qmodel.git
    cd Qmodel
    ```
 2. We recommend creating and activating a fresh Python virtual environment:
