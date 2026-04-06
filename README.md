@@ -20,6 +20,9 @@ This directory contains the executable code for the abstraction-based modeling a
    ```bash
    pip install -r requirements.txt
    ```
+
+After setup, choose the command that matches what you want to do:
+
 4. Run one model:
    ```bash
    python scripts/qmodel_cli.py run tests/models/clifford_bell.qmodel
@@ -32,7 +35,7 @@ This directory contains the executable code for the abstraction-based modeling a
    ```bash
    python scripts/qmodel_cli.py run tests/models/clifford_bell.qmodel --run-concrete
    ```
-7. Run a lightweight sanity check:
+7. Run a lightweight sanity check on the CLI and single-model runner:
    ```bash
    python -m unittest tests.test_quickstart_cli tests.test_run_single -v
    ```
