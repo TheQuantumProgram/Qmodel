@@ -533,19 +533,19 @@ class GroverGeneratorTests(unittest.TestCase):
 
         self.assertEqual(payload["program_name"], "grover_50")
         self.assertEqual(payload["metadata"]["search_bits"], 25)
-        self.assertEqual(payload["metadata"]["mark_bits"], 4)
-        self.assertEqual(payload["metadata"]["iterations"], 3)
+        self.assertEqual(payload["metadata"]["mark_bits"], 3)
+        self.assertEqual(payload["metadata"]["iterations"], 2)
         max_unit_width = max(
             len(unit["qubits"])
             for state in payload["organization_schedule"]["states"]
             for unit in state["units"]
         )
-        self.assertLessEqual(max_unit_width, 7)
+        self.assertLessEqual(max_unit_width, 5)
 
     def test_build_grover_payload_for_n100_and_n200_keep_core_unit_bounded(self) -> None:
         expected = {
-            100: (50, 5, 4, 9),
-            150: (75, 6, 6, 11),
+            100: (50, 4, 3, 7),
+            150: (75, 5, 4, 9),
             200: (100, 6, 6, 11),
         }
         for n, (search_bits, mark_bits, iterations, max_width) in expected.items():
@@ -566,9 +566,9 @@ class GroverGeneratorTests(unittest.TestCase):
         expected = {
             "grover_10.qmodel": ("grover_10", 5, 2, 1, ["q0", "q1"], "11"),
             "grover_20.qmodel": ("grover_20", 10, 3, 2, ["q0", "q1", "q2"], "111"),
-            "grover_50.qmodel": ("grover_50", 25, 4, 3, ["q0", "q1", "q2", "q3"], "1111"),
-            "grover_100.qmodel": ("grover_100", 50, 5, 4, ["q0", "q1", "q2", "q3", "q4"], "11111"),
-            "grover_150.qmodel": ("grover_150", 75, 6, 6, ["q0", "q1", "q2", "q3", "q4", "q5"], "111111"),
+            "grover_50.qmodel": ("grover_50", 25, 3, 2, ["q0", "q1", "q2"], "111"),
+            "grover_100.qmodel": ("grover_100", 50, 4, 3, ["q0", "q1", "q2", "q3"], "1111"),
+            "grover_150.qmodel": ("grover_150", 75, 5, 4, ["q0", "q1", "q2", "q3", "q4"], "11111"),
             "grover_200.qmodel": ("grover_200", 100, 6, 6, ["q0", "q1", "q2", "q3", "q4", "q5"], "111111"),
         }
         base = Path(

@@ -251,17 +251,15 @@ def _adder_output_bitstring(a_bits: str, b_bits: str) -> str:
 
 
 def _grover_mark_bits(search_bits: int) -> int:
-    if search_bits == 100:
-        return 6
     if search_bits <= 5:
         return 2
-    if search_bits <= 10:
-        return 3
     if search_bits <= 25:
-        return 4
+        return 3
     if search_bits <= 50:
-        return 5
+        return 4
     if search_bits <= 75:
+        return 5
+    if search_bits <= 100:
         return 6
     return 7
 

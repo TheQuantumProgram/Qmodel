@@ -1,26 +1,26 @@
 {
   "abstract": {
-    "elapsed_seconds": 78.22768135499791,
+    "elapsed_seconds": 0.10087182099994152,
     "judgment": "satisfied",
-    "max_execution_bytes": 264896,
-    "max_execution_mib": 0.25262451171875,
-    "max_state_bytes": 264896,
-    "max_state_mib": 0.25262451171875,
-    "max_transition_bytes": 264896,
-    "max_transition_mib": 0.25262451171875,
-    "probability": 0.9613189697265574,
-    "threshold": 0.96
+    "max_execution_bytes": 19264,
+    "max_execution_mib": 0.01837158203125,
+    "max_state_bytes": 19264,
+    "max_state_mib": 0.01837158203125,
+    "max_transition_bytes": 19264,
+    "max_transition_mib": 0.01837158203125,
+    "probability": 0.9453124999999973,
+    "threshold": 0.94
   },
   "assertion_kind": "probability",
   "assertion_name": "marked_subspace_probability",
   "comparison": {
     "abstract_ideal_pure_lower_bound": {
-      "max_execution_bytes": 3424,
-      "max_execution_mib": 0.003265380859375,
-      "max_state_bytes": 3424,
-      "max_state_mib": 0.003265380859375,
-      "max_transition_bytes": 3424,
-      "max_transition_mib": 0.003265380859375
+      "max_execution_bytes": 1952,
+      "max_execution_mib": 0.001861572265625,
+      "max_state_bytes": 1952,
+      "max_state_mib": 0.001861572265625,
+      "max_transition_bytes": 1952,
+      "max_transition_mib": 0.001861572265625
     },
     "full_execution": {
       "density_matrix_bytes": 20282409603651670423947251286016,
@@ -43,5 +43,5 @@
   "program_name": "grover_50",
   "reconstruction_mode": "trusted",
   "run_concrete": false,
-  "total_elapsed_seconds": 79.18641963400296
+  "total_elapsed_seconds": 0.4955196820000083
 }
