@@ -51,7 +51,7 @@ After setup, choose the command that matches what you want to do:
 
 ## Layout
 
-- `src/qmodel/`: Python package for program specification, parsing, concrete simulation, abstract modeling, assertions, and benchmarks.
+- `src/qmodel/`: Python package for program specification, parsing, concrete simulation, abstract modeling, and assertions.
 - `docs/`: Format notes and local project conventions for handwritten models.
 - `tests/models/`: Handwritten example `.qmodel` files used by the test suite.
 - `experiment_data/models/`: Formal experiment models for actual evaluation runs, organized by algorithm family.
@@ -65,7 +65,7 @@ After setup, choose the command that matches what you want to do:
 Specification and parsing:
 - core dataclasses for `QuantumProgramSpec`
 - basic validation utilities
-- package skeleton for later parser, concrete backend, abstract backend, assertions, and benchmarks
+- package skeleton for later parser, concrete backend, abstract backend, and assertions
 - `.qmodel` field rules and examples are documented
 - supported gate vocabulary is recorded explicitly, including the Clifford gate set
 - `.qmodel` files can now be parsed into `QuantumProgramSpec`
