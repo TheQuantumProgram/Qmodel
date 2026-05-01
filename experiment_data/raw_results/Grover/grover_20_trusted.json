@@ -1,6 +1,6 @@
 {
   "abstract": {
-    "elapsed_seconds": 0.03979763600000297,
+    "elapsed_seconds": 0.040196347999881255,
     "judgment": "satisfied",
     "max_execution_bytes": 17344,
     "max_execution_mib": 0.01654052734375,
@@ -29,21 +29,22 @@
       "statevector_bytes": 16777216,
       "statevector_mib": 16.0,
       "time_benchmark": {
-        "assertion_evaluation_seconds": 0.19384498400006578,
-        "concrete_backend_elapsed_seconds": 0.7571273620001193,
+        "assertion_evaluation_seconds": 0.25401601100020343,
+        "concrete_backend_elapsed_seconds": 1.4841038070007926,
         "cutoff_qubits": 22,
         "mode": "measured",
-        "statevector_elapsed_seconds": 0.5632823780000535
+        "statevector_elapsed_seconds": 1.2300877960005892
       }
     }
   },
   "concrete": {
-    "reason": "Concrete backend disabled by default; pass --run-concrete to enable it.",
-    "status": "skipped"
+    "judgment": "satisfied",
+    "probability": 0.9453124999999986,
+    "threshold": 0.94
   },
   "model_path": "experiment_data/models/Grover/grover_20.qmodel",
   "program_name": "grover_20",
   "reconstruction_mode": "trusted",
-  "run_concrete": false,
-  "total_elapsed_seconds": 0.9175198599999703
+  "run_concrete": true,
+  "total_elapsed_seconds": 3.4070011820003856
 }
