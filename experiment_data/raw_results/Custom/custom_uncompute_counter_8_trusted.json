@@ -42,7 +42,7 @@
     "judgment": "violated",
     "max_overlap": 0.0
   },
-  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/Custom/custom_uncompute_counter_8.qmodel",
+  "model_path": "experiment_data/models/Custom/custom_uncompute_counter_8.qmodel",
   "program_name": "custom_uncompute_counter_8",
   "reconstruction_mode": "trusted",
   "run_concrete": true,

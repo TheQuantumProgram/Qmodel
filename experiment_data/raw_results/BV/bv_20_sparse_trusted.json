@@ -84,7 +84,7 @@
     "probability": 0.9999999999999939,
     "threshold": 0.999999
   },
-  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/BV/bv_20_sparse.qmodel",
+  "model_path": "experiment_data/models/BV/bv_20_sparse.qmodel",
   "program_name": "bv_20_sparse",
   "reconstruction_mode": "trusted",
   "run_concrete": true,

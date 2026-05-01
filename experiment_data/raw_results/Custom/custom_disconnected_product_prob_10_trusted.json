@@ -42,7 +42,7 @@
     "probability": 0.12499999999999997,
     "threshold": 0.125
   },
-  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/Custom/custom_disconnected_product_prob_10.qmodel",
+  "model_path": "experiment_data/models/Custom/custom_disconnected_product_prob_10.qmodel",
   "program_name": "custom_disconnected_product_prob_10",
   "reconstruction_mode": "trusted",
   "run_concrete": true,

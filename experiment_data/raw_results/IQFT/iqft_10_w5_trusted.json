@@ -53,7 +53,7 @@
     "reason": "Concrete backend disabled by default; pass --run-concrete to enable it.",
     "status": "skipped"
   },
-  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/IQFT/iqft_10_w5.qmodel",
+  "model_path": "experiment_data/models/IQFT/iqft_10_w5.qmodel",
   "program_name": "iqft_10_w5",
   "reconstruction_mode": "trusted",
   "run_concrete": false,

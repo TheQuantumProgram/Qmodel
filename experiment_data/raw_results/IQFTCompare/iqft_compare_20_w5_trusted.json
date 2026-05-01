@@ -86,7 +86,7 @@
     "probability": 0.9975198831369342,
     "threshold": 0.996
   },
-  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/IQFTCompare/iqft_compare_20_w5.qmodel",
+  "model_path": "experiment_data/models/IQFTCompare/iqft_compare_20_w5.qmodel",
   "program_name": "iqft_compare_20_w5",
   "reconstruction_mode": "trusted",
   "run_concrete": true,

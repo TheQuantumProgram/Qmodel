@@ -42,7 +42,7 @@
     "judgment": "violated",
     "max_overlap": 0.0
   },
-  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/Custom/custom_ccx_ladder_counter_9.qmodel",
+  "model_path": "experiment_data/models/Custom/custom_ccx_ladder_counter_9.qmodel",
   "program_name": "custom_ccx_ladder_counter_9",
   "reconstruction_mode": "trusted",
   "run_concrete": true,

@@ -42,7 +42,7 @@
     "probability": 0.4999999999999999,
     "threshold": 0.5
   },
-  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/GHZ/ghz_10_staircase.qmodel",
+  "model_path": "experiment_data/models/GHZ/ghz_10_staircase.qmodel",
   "program_name": "ghz_10_staircase",
   "reconstruction_mode": "trusted",
   "run_concrete": true,

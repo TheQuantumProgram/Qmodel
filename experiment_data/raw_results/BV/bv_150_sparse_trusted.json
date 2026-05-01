@@ -190,7 +190,7 @@
     "reason": "Concrete backend disabled by default; pass --run-concrete to enable it.",
     "status": "skipped"
   },
-  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/BV/bv_150_sparse.qmodel",
+  "model_path": "experiment_data/models/BV/bv_150_sparse.qmodel",
   "program_name": "bv_150_sparse",
   "reconstruction_mode": "trusted",
   "run_concrete": false,

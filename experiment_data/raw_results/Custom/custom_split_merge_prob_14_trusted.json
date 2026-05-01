@@ -42,7 +42,7 @@
     "probability": 1.0,
     "threshold": 1.0
   },
-  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/Custom/custom_split_merge_prob_14.qmodel",
+  "model_path": "experiment_data/models/Custom/custom_split_merge_prob_14.qmodel",
   "program_name": "custom_split_merge_prob_14",
   "reconstruction_mode": "trusted",
   "run_concrete": true,

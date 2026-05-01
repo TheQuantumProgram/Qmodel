@@ -41,7 +41,7 @@
     "reason": "Concrete backend disabled by default; pass --run-concrete to enable it.",
     "status": "skipped"
   },
-  "model_path": "/home/li/project/QCE-2026/project_code/experiment_data/models/Grover/grover_20.qmodel",
+  "model_path": "experiment_data/models/Grover/grover_20.qmodel",
   "program_name": "grover_20",
   "reconstruction_mode": "trusted",
   "run_concrete": false,

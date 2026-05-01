@@ -41,6 +41,7 @@ class RunSingleScriptTests(unittest.TestCase):
     def test_run_single_default_mode_reports_matching_probability_results(self) -> None:
         result = self._run(str(_MODELS_DIR / "clifford_bell.qmodel"))
 
+        self.assertEqual(result["model_path"], "tests/models/clifford_bell.qmodel")
         self.assertEqual(result["program_name"], "clifford_bell")
         self.assertEqual(result["reconstruction_mode"], "trusted")
         self.assertEqual(result["assertion_kind"], "probability")
@@ -178,6 +179,7 @@ class RunSingleScriptTests(unittest.TestCase):
         )
 
         self.assertEqual(result["program_name"], "state_size_demo")
+        self.assertFalse(Path(result["model_path"]).is_absolute())
         self.assertEqual(result["abstract"]["max_state_bytes"], 1344)
         self.assertEqual(result["abstract"]["max_transition_bytes"], 4160)
         self.assertEqual(result["abstract"]["max_execution_bytes"], 4160)

@@ -21,6 +21,8 @@ from qmodel.concrete import (
 )
 from qmodel.parser import parse_qmodel_file
 
+_PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -49,6 +51,16 @@ def _evaluate_concrete(spec) -> dict[str, Any]:
 
 def _abstract_state_bytes(state) -> int:
     return sum(int(unit.witness_rho.data.nbytes) for unit in state.units)
+
+
+def _portable_model_path(model: str | Path, resolved_path: Path) -> str:
+    input_path = Path(model)
+    if not input_path.is_absolute():
+        return input_path.as_posix()
+    try:
+        return resolved_path.relative_to(_PROJECT_ROOT).as_posix()
+    except ValueError:
+        return input_path.name
 
 
 def run_model(
@@ -108,7 +120,7 @@ def run_model(
         }
 
     return {
-        "model_path": str(model_path),
+        "model_path": _portable_model_path(model, model_path),
         "program_name": spec.program_name,
         "reconstruction_mode": mode,
         "run_concrete": run_concrete,
