@@ -85,7 +85,7 @@ Abstract execution:
 - abstract transitions update unit witnesses directly when a gate stays within one affected view
 - multi-view or reorganized transitions reconstruct workspace inputs from existing unit states and certificates instead of storing a persistent full global witness inside the abstract trace
 - trusted reconstruction mode allows tolerant stitching of overlapping units after consistency checks
-- checked reconstruction mode treats missing shared certificates on overlapping joins as modeling errors
+- checked reconstruction mode adds stricter overlap-consistency checks and is intended for more certificate-disciplined reconstruction workflows
 - reachability and terminal probability checks reconstruct queried scopes from unit-local witnesses and reconstruction certificates
 
 Documentation:
@@ -145,6 +145,7 @@ Custom Models:
 Limitations:
 - the batch runner is intentionally lightweight and currently prints aggregated JSON payloads to stdout instead of writing raw-result files automatically
 - tolerant reconstruction across overlapping units is still heuristic when no direct shared certificate covers the full requested workspace
+- the current checked mode still shares part of the cross-unit workspace reconstruction path with trusted mode, so some heuristic fallback remains in that path
 - the exact scope-state provider in the concrete backend remains only as a reference/debug utility
 
 Runner behavior:

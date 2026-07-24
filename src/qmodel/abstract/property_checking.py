@@ -332,7 +332,7 @@ def evaluate_reachability_assertion(
     spec: QuantumProgramSpec,
     reconstruction_mode: ReconstructionMode = "trusted",
 ) -> dict[str, Any]:
-    """Evaluate the single reachability assertion on the abstract trace."""
+    """Evaluate the single path reachability assertion on the abstract trace."""
 
     validate_program_spec(spec)
 
@@ -370,6 +370,50 @@ def evaluate_reachability_assertion(
         "max_overlap": max_overlap,
         "first_reached_index": first_reached_index,
         "judgment": "satisfied" if first_reached_index is not None else "violated",
+    }
+
+
+def evaluate_terminal_reachability_assertion(
+    trace: AbstractExecutionTrace,
+    spec: QuantumProgramSpec,
+    reconstruction_mode: ReconstructionMode = "trusted",
+) -> dict[str, Any]:
+    """Evaluate the single terminal reachability assertion on the abstract trace."""
+
+    validate_program_spec(spec)
+
+    if len(spec.assertions) != 1:
+        raise AbstractPropertyCheckingError("Expected exactly one assertion")
+
+    assertion = spec.assertions[0]
+    if assertion.kind != "terminal_reachability":
+        raise AbstractPropertyCheckingError("Only terminal_reachability assertions are supported")
+
+    if assertion.target.get("type") != "basis_state":
+        raise AbstractPropertyCheckingError(
+            "Only basis_state terminal_reachability targets are supported"
+        )
+
+    scope = assertion.target["scope"]
+    state = assertion.target.get("state")
+    if not isinstance(state, str) or not state.strip():
+        raise AbstractPropertyCheckingError(
+            "basis_state terminal_reachability assertions require a non-empty 'state' field"
+        )
+
+    projector = _basis_state_projector(len(scope), state)
+    witness = state_scope_witness(
+        trace,
+        spec,
+        len(trace.states) - 1,
+        scope,
+        reconstruction_mode=reconstruction_mode,
+    )
+    terminal_overlap = _projector_overlap(witness, projector)
+
+    return {
+        "terminal_overlap": terminal_overlap,
+        "judgment": "satisfied" if terminal_overlap > _COMPARISON_TOLERANCE else "violated",
     }
 
 
@@ -509,6 +553,10 @@ def evaluate_assertion(
     assertion = spec.assertions[0]
     if assertion.kind == "reachability":
         return evaluate_reachability_assertion(
+            trace, spec, reconstruction_mode=reconstruction_mode
+        )
+    if assertion.kind == "terminal_reachability":
+        return evaluate_terminal_reachability_assertion(
             trace, spec, reconstruction_mode=reconstruction_mode
         )
     if assertion.kind == "probability":

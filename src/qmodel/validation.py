@@ -11,7 +11,7 @@ class SpecValidationError(ValueError):
 
 _ALLOWED_INITIAL_STATES = {"zero"}
 _ALLOWED_MEASUREMENT_BASES = {"computational"}
-_ALLOWED_ASSERTION_KINDS = {"reachability", "probability"}
+_ALLOWED_ASSERTION_KINDS = {"reachability", "terminal_reachability", "probability"}
 _ALLOWED_COMPARATORS = {">=", "<=", "="}
 _SUPPORTED_GATES = {
     "I",
@@ -99,19 +99,19 @@ def _validate_assertion_structure(kind: str, target: dict[str, object], context:
     if not isinstance(scope, list) or not scope or not all(isinstance(item, str) for item in scope):
         raise SpecValidationError(f"{context} target.scope must be a non-empty list of strings")
 
-    if kind == "reachability":
+    if kind in {"reachability", "terminal_reachability"}:
         if target_type != "basis_state":
             raise SpecValidationError(
-                f"{context} reachability target.type must be 'basis_state' in v1"
+                f"{context} {kind} target.type must be 'basis_state' in v1"
             )
         state = target.get("state")
         if not isinstance(state, str) or not state.strip():
             raise SpecValidationError(
-                f"{context} basis_state reachability targets must define a non-empty state"
+                f"{context} basis_state {kind} targets must define a non-empty state"
             )
         if len(state.strip()) != len(scope) or any(bit not in "01" for bit in state.strip()):
             raise SpecValidationError(
-                f"{context} basis_state reachability target.state must be a bitstring matching scope width"
+                f"{context} basis_state {kind} target.state must be a bitstring matching scope width"
             )
         return
 

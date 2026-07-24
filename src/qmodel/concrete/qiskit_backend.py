@@ -397,7 +397,7 @@ def _bitwise_measurement_outcome_probability_from_statevector(
 
 
 def evaluate_reachability_assertion(spec: QuantumProgramSpec) -> dict[str, float | int | str | None]:
-    """Evaluate the single reachability assertion stored in the specification."""
+    """Evaluate the single path reachability assertion stored in the specification."""
 
     validate_program_spec(spec)
 
@@ -430,6 +430,42 @@ def evaluate_reachability_assertion(spec: QuantumProgramSpec) -> dict[str, float
         "max_overlap": max_overlap,
         "first_reached_index": first_reached_index,
         "judgment": "satisfied" if first_reached_index is not None else "violated",
+    }
+
+
+def evaluate_terminal_reachability_assertion(spec: QuantumProgramSpec) -> dict[str, float | str]:
+    """Evaluate the single terminal reachability assertion stored in the specification."""
+
+    validate_program_spec(spec)
+
+    if len(spec.assertions) != 1:
+        raise ConcreteBackendError("Terminal reachability evaluation expects exactly one assertion")
+
+    assertion = spec.assertions[0]
+    if assertion.kind != "terminal_reachability":
+        raise ConcreteBackendError(
+            "Only terminal_reachability assertions are supported in this stage"
+        )
+    if assertion.target.get("type") != "basis_state":
+        raise ConcreteBackendError(
+            "Only basis_state terminal_reachability targets are supported in this stage"
+        )
+
+    scope = assertion.target["scope"]
+    state = assertion.target.get("state")
+    if not isinstance(state, str) or not state.strip():
+        raise ConcreteBackendError(
+            "Terminal reachability target.state must be a non-empty bitstring"
+        )
+
+    projector = _basis_state_projector(len(scope), state)
+    final_state = simulate_statevector(spec)
+    witness = _scope_density_from_statevector(final_state, spec.qubits, scope)
+    terminal_overlap = _projector_overlap(witness, projector)
+
+    return {
+        "terminal_overlap": terminal_overlap,
+        "judgment": "satisfied" if terminal_overlap > _COMPARISON_TOLERANCE else "violated",
     }
 
 
@@ -542,4 +578,6 @@ def evaluate_assertion(spec: QuantumProgramSpec) -> dict[str, Any]:
         return evaluate_probability_assertion(spec)
     if assertion.kind == "reachability":
         return evaluate_reachability_assertion(spec)
+    if assertion.kind == "terminal_reachability":
+        return evaluate_terminal_reachability_assertion(spec)
     raise ConcreteBackendError(f"Unsupported assertion kind: {assertion.kind!r}")

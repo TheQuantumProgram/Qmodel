@@ -154,11 +154,12 @@ For `MCX`, the preferred representation is:
 
 ## Assertion Rules
 
-Version 1 uses exactly one terminal assertion per file.
+Version 1 uses exactly one assertion per file.
 
 Supported assertion kinds:
 
 - `reachability`
+- `terminal_reachability`
 - `probability`
 
 Version 1 uses the following concrete assertion shapes:
@@ -168,6 +169,12 @@ Version 1 uses the following concrete assertion shapes:
   - `target.scope` is a non-empty ordered qubit list
   - `target.state` is a bitstring whose length matches `scope`
   - semantic meaning: along the execution trace, some reachable step has non-zero overlap with the basis-state projector on the given scope
+
+- `terminal_reachability`
+  - `target.type` must be `basis_state`
+  - `target.scope` is a non-empty ordered qubit list
+  - `target.state` is a bitstring whose length matches `scope`
+  - semantic meaning: after the declared gate sequence finishes, the terminal state has non-zero overlap with the basis-state projector on the given scope
 
 - `probability`
   - `target.type` must be `measurement_outcome`

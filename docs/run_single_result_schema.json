@@ -35,7 +35,7 @@
     },
     "assertion_kind": {
       "type": "string",
-      "enum": ["probability", "reachability"]
+      "enum": ["probability", "reachability", "terminal_reachability"]
     },
     "total_elapsed_seconds": {
       "type": "number",
@@ -96,6 +96,9 @@
         },
         "first_reached_index": {
           "type": ["integer", "null"]
+        },
+        "terminal_overlap": {
+          "type": "number"
         }
       },
       "additionalProperties": true
@@ -116,6 +119,15 @@
           "type": "number"
         },
         "threshold": {
+          "type": "number"
+        },
+        "max_overlap": {
+          "type": "number"
+        },
+        "first_reached_index": {
+          "type": ["integer", "null"]
+        },
+        "terminal_overlap": {
           "type": "number"
         }
       },
