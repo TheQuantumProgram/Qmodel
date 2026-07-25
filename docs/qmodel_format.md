@@ -1,17 +1,8 @@
 # `.qmodel` Format Notes
 
-This document records the current Version 1 rules for handwritten model files used in experiments.
+This document records the current Version 1 rules for handwritten model files.
 
-The small illustrative `.qmodel` examples currently live under `project_code/tests/models/`. The `project_code/experiment_data/` tree is reserved for formal experiment inputs and generated results.
-
-Formal experiment models are organized by algorithm family under:
-
-- `project_code/experiment_data/models/GHZ/`
-- `project_code/experiment_data/models/BV/`
-- `project_code/experiment_data/models/Grover/`
-- `project_code/experiment_data/models/IQFT/`
-- `project_code/experiment_data/models/Adder/`
-- `project_code/experiment_data/models/Custom/`
+Small illustrative `.qmodel` examples live under `examples/`.
 
 ## Purpose
 

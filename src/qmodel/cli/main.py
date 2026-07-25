@@ -1,0 +1,60 @@
+"""Command-line interface for qmodel."""
+
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+
+from .batch import discover_model_paths, run_models
+from .run_single import run_model
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description=__doc__)
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    common = argparse.ArgumentParser(add_help=False)
+    common.add_argument(
+        "--run-concrete",
+        action="store_true",
+        help="Also run the concrete reference backend. Disabled by default.",
+    )
+    common.add_argument(
+        "--mode",
+        choices=("trusted", "checked"),
+        default="trusted",
+        help="Abstract reconstruction mode. Default: trusted",
+    )
+
+    run_parser = subparsers.add_parser("run", parents=[common], help="Run one .qmodel file")
+    run_parser.add_argument("model", help="Path to one .qmodel file")
+
+    run_all_parser = subparsers.add_parser(
+        "run-all",
+        parents=[common],
+        help="Run all discovered .qmodel files under a directory",
+    )
+    run_all_parser.add_argument("models_root", help="Directory used to discover .qmodel files")
+    run_all_parser.add_argument(
+        "--family",
+        help="Optional family directory filter.",
+    )
+    return parser
+
+
+def main() -> int:
+    args = build_parser().parse_args()
+    if args.command == "run":
+        payload = run_model(args.model, run_concrete=args.run_concrete, mode=args.mode)
+        print(json.dumps(payload, indent=2, sort_keys=True))
+        return 0
+
+    model_paths = discover_model_paths(Path(args.models_root), family=args.family)
+    payload = run_models(model_paths, run_concrete=args.run_concrete, mode=args.mode)
+    print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

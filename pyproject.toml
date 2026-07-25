@@ -13,6 +13,9 @@ dependencies = [
     "qiskit>=2.3.1",
 ]
 
+[project.scripts]
+qmodel = "qmodel.cli:main"
+
 [tool.setuptools]
 package-dir = {"" = "src"}
 

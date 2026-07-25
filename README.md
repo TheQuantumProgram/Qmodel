@@ -1,7 +1,6 @@
 # Quantum Program Modeling Project
 
-This directory contains the executable code for the abstraction-based modeling and verification project.
-
+This repository contains the executable package for abstraction-based modeling and verification of circuit-oriented quantum programs.
 
 ## Quick Start
 
@@ -10,166 +9,125 @@ This directory contains the executable code for the abstraction-based modeling a
    git clone https://github.com/TheQuantumProgram/Qmodel.git
    cd Qmodel
    ```
-2. We recommend creating and activating a fresh Python virtual environment:
+
+2. Create and activate a Python virtual environment:
    ```bash
    python3 -m venv .venv
    source .venv/bin/activate
    ```
-   On Debian/Ubuntu, if `python3 -m venv` is unavailable, install `python3-venv` first.
-3. Install the runnable environment snapshot:
+
+3. Install the package and its dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-After setup, choose the command that matches what you want to do:
+4. Run the included example model:
+   ```bash
+   qmodel run examples/clifford_bell.qmodel
+   ```
 
-4. Run one model:
+5. Run the same model with the concrete reference backend enabled:
    ```bash
-   python scripts/qmodel_cli.py run tests/models/clifford_bell.qmodel
+   qmodel run examples/clifford_bell.qmodel --run-concrete
    ```
-5. Run one model family:
+
+6. Run every `.qmodel` file under a directory:
    ```bash
-   python scripts/qmodel_cli.py run-all --family GHZ
+   qmodel run-all examples
    ```
-6. Enable the concrete backend only for small models when an exact reference is needed:
-   ```bash
-   python scripts/qmodel_cli.py run tests/models/clifford_bell.qmodel --run-concrete
-   ```
-7. Run a lightweight sanity check on the CLI and single-model runner:
-   ```bash
-   python -m unittest tests.test_quickstart_cli tests.test_run_single -v
-   ```
-8. Run the full benchmark sweep only when you intentionally want the complete experiment workload:
-   ```bash
-   python scripts/qmodel_cli.py run-all
-   ```
-9. Run the full test suite only when you want complete repository verification:
-   ```bash
-   python -m unittest discover -s tests -v
-   ```
-   The full suite parses the largest tracked benchmark models and can take several minutes.
+
+The CLI prints a JSON payload containing the assertion result, abstract execution statistics, and comparison metadata.
 
 ## Layout
 
-- `src/qmodel/`: Python package for program specification, parsing, concrete simulation, abstract modeling, and assertions.
-- `docs/`: Format notes and local project conventions for handwritten models.
-- `tests/models/`: Handwritten example `.qmodel` files used by the test suite.
-- `experiment_data/models/`: Formal experiment models for actual evaluation runs, organized by algorithm family.
-- `experiment_data/raw_results/`: Raw experiment outputs such as JSON and CSV.
-- `experiment_data/summaries/`: Aggregated tables and processed summaries.
-- `scripts/`: Command-line entry points and benchmark-running helpers.
-- `tests/`: Unit tests for core components.
+- `src/qmodel/`: Python package for specifications, parsing, concrete simulation, abstract execution, property checking, and the command-line interface.
+- `examples/`: Small runnable `.qmodel` examples.
+- `docs/`: Model-format notes and result-schema documentation.
+- `requirements.txt`: Environment snapshot for reproducing the package setup.
+- `pyproject.toml`: Package metadata and CLI entry-point definition.
+
+## Modeling Format
+
+A `.qmodel` file describes one verification instance:
+
+- a fixed ordered qubit register
+- a sequence of gate occurrences
+- an optional terminal measurement
+- either static units or an explicit `organization_schedule`
+- one assertion
+
+The current assertion kinds are:
+
+- `probability`: terminal measurement or bitwise measurement probability checking
+- `reachability`: path-style basis-state reachability along the execution trace
+- `terminal_reachability`: basis-state reachability at the final program state
+
+The model-format rules and examples are documented in `docs/qmodel_format.md`.
+
+## CLI
+
+Run one model:
+
+```bash
+qmodel run path/to/model.qmodel
+```
+
+Run one model with exact concrete comparison:
+
+```bash
+qmodel run path/to/model.qmodel --run-concrete
+```
+
+Run a directory of models:
+
+```bash
+qmodel run-all path/to/models
+```
+
+Filter a model directory by family subdirectory:
+
+```bash
+qmodel run-all path/to/models --family GHZ
+```
+
+Select the abstract reconstruction mode:
+
+```bash
+qmodel run path/to/model.qmodel --mode checked
+```
 
 ## Capabilities
 
 Specification and parsing:
-- core dataclasses for `QuantumProgramSpec`
-- basic validation utilities
-- package skeleton for later parser, concrete backend, abstract backend, and assertions
-- `.qmodel` field rules and examples are documented
-- supported gate vocabulary is recorded explicitly, including the Clifford gate set
-- `.qmodel` files can now be parsed into `QuantumProgramSpec`
-- `.qmodel` can now describe either a static unit layout or an explicit organization-state chain through `organization_schedule`
+
+- `QuantumProgramSpec` dataclasses for declarative quantum-program instances
+- validation for qubits, gates, measurements, organization schedules, and assertions
+- `.qmodel` parsing into the shared in-memory specification
+- support for static unit layouts and explicit organization-state chains
 
 Concrete execution:
-- `QuantumProgramSpec` can now be translated into a Qiskit `QuantumCircuit`
-- supported gate mapping includes Clifford gates, `Ry`, `P`, `CCX`, `MCX`, and controlled `X`
-- terminal measurement is appended from the declarative specification
-- exact pre-measurement terminal states can be simulated through Qiskit statevectors
-- terminal probability assertions over declared measurement outcomes can now be evaluated exactly
-- basis-state reachability assertions can now be evaluated exactly along the concrete state trajectory
+
+- translation from `QuantumProgramSpec` to Qiskit circuits
+- support for `I`, `X`, `Y`, `Z`, `H`, `S`, `Sdg`, `T`, `Tdg`, `Ry`, `P`, `CX`, `CP`, `CZ`, `SWAP`, `CCX`, and `MCX`
+- exact statevector simulation for small reference runs
+- terminal probability, path reachability, and terminal reachability evaluation
 
 Abstract execution:
-- abstract states store per-unit witness states and support projectors
-- abstract states also carry internal reconstruction certificates produced by merge-update-rewrite steps
-- abstract transitions update unit witnesses directly when a gate stays within one affected view
-- multi-view or reorganized transitions reconstruct workspace inputs from existing unit states and certificates instead of storing a persistent full global witness inside the abstract trace
-- trusted reconstruction mode allows tolerant stitching of overlapping units after consistency checks
-- checked reconstruction mode adds stricter overlap-consistency checks and is intended for more certificate-disciplined reconstruction workflows
-- reachability and terminal probability checks reconstruct queried scopes from unit-local witnesses and reconstruction certificates
 
-Documentation:
-- `docs/qmodel_format.md`: current `.qmodel` field rules, supported gate vocabulary, and examples
-- `tests/models/clifford_bell.qmodel`: minimal Clifford example using an explicit organization-state chain
-- `tests/models/clifford_gate_showcase.qmodel`: Clifford example using a repeated organization-state chain
-- `tests/models/ccx_overlap_demo.qmodel`: overlapping-view example with stepwise organization changes aligned with the manuscript
-- `experiment_data/models/README.md`: family-level catalog for formal experiment models
+- unit-local witness states and support projectors
+- gate-labeled abstract transitions over static or scheduled unit organizations
+- single-view updates for gates contained in one affected unit
+- cross-unit workspace reconstruction for coupled updates
+- trusted and checked reconstruction modes
+- explicit-state storage statistics for abstract states and transition workspaces
 
-Formal Experiment-Model Families:
-- `experiment_data/models/GHZ/`: GHZ-state preparation and related staircase-entanglement instances
-- `experiment_data/models/BV/`: Bernstein-Vazirani instances with structured oracle layouts
-- `experiment_data/models/Grover/`: Grover-search instances and oracle/diffusion variants
-- `experiment_data/models/IQFT/`: approximate inverse-QFT recovery families with sliding-window phase interactions
-- `experiment_data/models/IQFTCompare/`: small-scale IQFT comparison instances used to compare abstract model checking against full execution on `n = 10..20`
-- `experiment_data/models/Adder/`: ripple-carry adders and related arithmetic-circuit families
-- `experiment_data/models/Custom/`: original circuit suites for overlap-heavy and structured-control stress tests
+## Output
 
-GHZ Models:
-- standard staircase GHZ: `n = 10, 20, 50, 100, 150, 200`
-- biased-root staircase GHZ: `n = 20` with `p(root=1)=0.25`, and `n = 50` with `p(root=1)=0.75`
+`qmodel run` returns a JSON object with:
 
-BV Models:
-- sparse-oracle BV: `n = 10, 20, 50, 100, 150, 200`
+- `abstract`: assertion result and abstract execution statistics
+- `concrete`: exact reference result when `--run-concrete` is enabled
+- `comparison`: statevector and abstract-storage comparison metadata
+- `assertion_kind`, `assertion_name`, `program_name`, and timing fields
 
-IQFT Models:
-- sliding-window IQFT recovery: `n = 10, 20, 50, 100, 150, 200`, all with window size `5`
-- small comparison suite for abstract/full-execution cost ratios: `n = 10, 11, ..., 20`, all with window size `5`
-
-Adder Models:
-- ripple-carry adders with dynamic carry-window schedules: `n = 10, 20, 50, 100, 150, 200`
-
-Grover Models:
-- bounded-local-core multi-solution Grover instances: `n = 10, 20, 50, 100, 150, 200`
-
-Custom Models:
-- small positive baselines:
-  - `custom_overlap_chain_prob_6`
-  - `custom_back_edge_prob_6`
-  - `custom_split_merge_prob_8`
-  - `custom_ccx_ladder_reach_9`
-  - `custom_uncompute_reach_8`
-  - `custom_disconnected_product_prob_10`
-- small counterexamples:
-  - `custom_overlap_chain_counter_6`
-  - `custom_split_merge_counter_8`
-  - `custom_disconnected_product_counter_10`
-  - `custom_ccx_ladder_counter_9`
-  - `custom_uncompute_counter_8`
-- medium positive models:
-  - `custom_overlap_chain_prob_12`
-  - `custom_back_edge_prob_12`
-  - `custom_split_merge_prob_14`
-  - `custom_ccx_ladder_reach_15`
-  - `custom_disconnected_product_prob_20`
-
-Limitations:
-- the batch runner is intentionally lightweight and currently prints aggregated JSON payloads to stdout instead of writing raw-result files automatically
-- tolerant reconstruction across overlapping units is still heuristic when no direct shared certificate covers the full requested workspace
-- the current checked mode still shares part of the cross-unit workspace reconstruction path with trusted mode, so some heuristic fallback remains in that path
-- the exact scope-state provider in the concrete backend remains only as a reference/debug utility
-
-Runner behavior:
-- `scripts/qmodel_cli.py` provides the Quick Start entry point for single-model and batch execution
-- `scripts/run_single.py` now runs the abstract backend by default
-- the concrete backend is skipped by default so large-`n` models are not forced into exact global simulation
-- pass `--run-concrete` only for small instances when an exact reference comparison is actually needed
-- when `organization_schedule` is present, the runner and abstract trace builder use it as the per-step unit organization source instead of repeating static top-level `units`
-- `scripts/run_single.py` records abstract verification time, explicit-state memory peaks, transition-time memory peaks, and the overall execution memory peak
-- `scripts/run_single.py` also emits a `comparison` block with:
-  - an abstract ideal pure-state lower-bound estimate
-  - exact full-execution statevector/density-matrix space formulas
-  - optional full-execution timing when the qubit count is below the automatic cutoff
-
-Timing Fields:
-- `abstract.elapsed_seconds`
-  - abstract backend only
-  - includes abstract trace construction plus abstract assertion checking
-- `comparison.full_execution.time_benchmark.statevector_elapsed_seconds`
-  - concrete full-execution baseline for exact terminal statevector simulation only
-- `comparison.full_execution.time_benchmark.assertion_evaluation_seconds`
-  - concrete assertion-checking time after the statevector is already available
-- `comparison.full_execution.time_benchmark.concrete_backend_elapsed_seconds`
-  - concrete full-execution baseline time for `statevector + assertion evaluation`
-- `total_elapsed_seconds`
-  - whole `run_single.py` wall-clock time
-  - includes abstract execution, optional full-execution timing, JSON assembly, and other runner overhead
+The result schema is documented in `docs/run_single_result_schema.json`.
